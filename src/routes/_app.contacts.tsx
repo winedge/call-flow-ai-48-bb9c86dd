@@ -228,24 +228,53 @@ function ContactsPage() {
             {lists.map((l) => {
               const count = countsByList.map.get(l.id) ?? 0;
               return (
-                <button
+                <div
                   key={l.id}
-                  onClick={() => { setSelected(new Set()); setSearch(""); setActiveListId(l.id); }}
-                  className="text-left bg-white ring-1 ring-black/5 rounded-xl p-4 hover:ring-black/20 transition group"
+                  className="relative bg-white ring-1 ring-black/5 rounded-xl hover:ring-black/20 transition group"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <Users className="size-4 text-neutral-500 shrink-0" />
-                        <div className="font-medium text-neutral-900 truncate">{l.name}</div>
+                  <button
+                    onClick={() => { setSelected(new Set()); setSearch(""); setActiveListId(l.id); }}
+                    className="w-full text-left p-4"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <Users className="size-4 text-neutral-500 shrink-0" />
+                          <div className="font-medium text-neutral-900 truncate">{l.name}</div>
+                        </div>
+                        <div className="mt-1 text-xs text-neutral-500">
+                          {count.toLocaleString()} {count === 1 ? "contact" : "contacts"}
+                        </div>
                       </div>
-                      <div className="mt-1 text-xs text-neutral-500">
-                        {count.toLocaleString()} {count === 1 ? "contact" : "contacts"}
-                      </div>
+                      <ChevronRight className="size-4 text-neutral-400 group-hover:text-neutral-700 shrink-0 mr-7" />
                     </div>
-                    <ChevronRight className="size-4 text-neutral-400 group-hover:text-neutral-700 shrink-0" />
-                  </div>
-                </button>
+                  </button>
+                  <button
+                    aria-label={`Delete list ${l.name}`}
+                    disabled={deletingListId === l.id}
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      if (
+                        !window.confirm(
+                          `Delete list "${l.name}"? This also deletes its ${count.toLocaleString()} contact${count === 1 ? "" : "s"}.`,
+                        )
+                      )
+                        return;
+                      setDeletingListId(l.id);
+                      try {
+                        await deleteList(l.id);
+                        toast.success(`Deleted "${l.name}"`);
+                      } catch (err) {
+                        toast.error(err instanceof Error ? err.message : "Could not delete list");
+                      } finally {
+                        setDeletingListId(null);
+                      }
+                    }}
+                    className="absolute top-3 right-3 rounded-md p-1.5 text-neutral-400 hover:text-rose-600 hover:bg-rose-50 disabled:opacity-50"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
               );
             })}
             {countsByList.unassigned > 0 && (
