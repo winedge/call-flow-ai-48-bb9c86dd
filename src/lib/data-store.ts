@@ -309,6 +309,7 @@ type DBState = ReturnType<typeof buildSeed> & {
   deleteAgent: (id: UUID) => void;
   addList: (name: string, description: string) => ContactList;
   createList: (name: string, description: string) => Promise<ContactList>;
+  deleteList: (id: UUID) => Promise<void>;
   addContact: (c: ContactDraft) => Contact;
   addContactsBulk: (cs: ContactDraft[]) => number;
   importContacts: (cs: ContactDraft[], listId: UUID) => Promise<ContactImportResult>;
