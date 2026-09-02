@@ -8,7 +8,7 @@
  */
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { AlertCircle, Brain, CheckCircle2, Clock, MinusCircle, RefreshCw } from "lucide-react";
+import { AlertCircle, Brain, CheckCircle2, Clock, Lightbulb, MinusCircle, RefreshCw } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
@@ -25,9 +25,33 @@ type ReflectionRow = {
   next_attempt_at: string | null;
   success_score: number | null;
   success_label: string | null;
+  key_learnings: unknown;
   created_at: string;
   updated_at: string;
 };
+
+function learningsOf(row: ReflectionRow): string[] {
+  if (!Array.isArray(row.key_learnings)) return [];
+  return row.key_learnings.filter((x): x is string => typeof x === "string" && x.trim().length > 0);
+}
+
+/** Most recent, de-duplicated learnings across successful reflections. */
+function topLearnings(rows: ReflectionRow[] | null, max = 4): string[] {
+  if (!rows) return [];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const r of rows) {
+    if (r.status !== "success") continue;
+    for (const l of learningsOf(r)) {
+      const k = l.toLowerCase().replace(/[^a-z0-9 ]/g, "").slice(0, 60);
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(l);
+      if (out.length >= max) return out;
+    }
+  }
+  return out;
+}
 
 const POLL_MS = 20_000;
 
@@ -64,7 +88,7 @@ function shortTime(iso: string) {
 async function fetchReflections(opts: { agentId?: string; limit: number }): Promise<ReflectionRow[]> {
   let q = supabase
     .from("call_reflections")
-    .select("id, call_id, agent_id, status, attempts, last_error, next_attempt_at, success_score, success_label, created_at, updated_at")
+    .select("id, call_id, agent_id, status, attempts, last_error, next_attempt_at, success_score, success_label, key_learnings, created_at, updated_at")
     .order("updated_at", { ascending: false })
     .limit(opts.limit);
   if (opts.agentId) q = q.eq("agent_id", opts.agentId);
@@ -228,6 +252,8 @@ export function ReflectionHealthWidget() {
       )
     : { success: 0, pending: 0, failed: 0, skipped: 0 };
 
+  const learned = topLearnings(rows);
+
   const recentFailed = (rows ?? []).filter((r) => r.status === "failed").slice(0, 4);
 
   return (
@@ -247,6 +273,31 @@ export function ReflectionHealthWidget() {
         <Stat label="Pending" value={counts.pending} tone="amber" />
         <Stat label="Failed" value={counts.failed} tone="rose" />
         <Stat label="Skipped" value={counts.skipped} tone="neutral" />
+      </div>
+
+      <div className="border-t border-neutral-200/70 px-5 py-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-neutral-500">
+            What the AI has learned
+          </span>
+          <span className="text-[10px] font-mono text-neutral-400">
+            {counts.success} call{counts.success === 1 ? "" : "s"} analyzed
+          </span>
+        </div>
+        {learned.length === 0 ? (
+          <p className="text-[11px] text-neutral-500 italic">
+            Nothing yet — lessons appear here once calls have been analyzed.
+          </p>
+        ) : (
+          <ul className="space-y-1.5">
+            {learned.map((l, i) => (
+              <li key={i} className="flex gap-2 text-[11px] text-neutral-700 leading-relaxed">
+                <Lightbulb className="size-3 mt-0.5 shrink-0 text-amber-500" />
+                <span>{l}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="border-t border-neutral-200/70 px-5 py-4">

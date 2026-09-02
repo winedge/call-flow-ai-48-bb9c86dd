@@ -309,6 +309,7 @@ type DBState = ReturnType<typeof buildSeed> & {
   deleteAgent: (id: UUID) => void;
   addList: (name: string, description: string) => ContactList;
   createList: (name: string, description: string) => Promise<ContactList>;
+  deleteList: (id: UUID) => Promise<void>;
   addContact: (c: ContactDraft) => Contact;
   addContactsBulk: (cs: ContactDraft[]) => number;
   importContacts: (cs: ContactDraft[], listId: UUID) => Promise<ContactImportResult>;
@@ -604,6 +605,19 @@ export const useDB = create<DBState>()(
           failed,
           errors,
         };
+      },
+      deleteList: async (id) => {
+        // Detach campaigns pointing at this list, drop its contacts, then the list.
+        await supabase.from("campaigns").update({ list_id: null } as never).eq("list_id", id);
+        const { error: contactsErr } = await supabase.from("contacts").delete().eq("list_id", id);
+        if (contactsErr) throw new Error(contactsErr.message);
+        const { error } = await supabase.from("contact_lists").delete().eq("id", id);
+        if (error) throw new Error(error.message);
+        set((s) => ({
+          lists: s.lists.filter((l) => l.id !== id),
+          contacts: s.contacts.filter((c) => c.list_id !== id),
+          campaigns: s.campaigns.map((c) => (c.list_id === id ? { ...c, list_id: "" } : c)),
+        }));
       },
       deleteContacts: (ids) => {
         const set2 = new Set(ids);
