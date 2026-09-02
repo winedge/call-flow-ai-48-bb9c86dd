@@ -606,6 +606,19 @@ export const useDB = create<DBState>()(
           errors,
         };
       },
+      deleteList: async (id) => {
+        // Detach campaigns pointing at this list, drop its contacts, then the list.
+        await supabase.from("campaigns").update({ list_id: null } as never).eq("list_id", id);
+        const { error: contactsErr } = await supabase.from("contacts").delete().eq("list_id", id);
+        if (contactsErr) throw new Error(contactsErr.message);
+        const { error } = await supabase.from("contact_lists").delete().eq("id", id);
+        if (error) throw new Error(error.message);
+        set((s) => ({
+          lists: s.lists.filter((l) => l.id !== id),
+          contacts: s.contacts.filter((c) => c.list_id !== id),
+          campaigns: s.campaigns.map((c) => (c.list_id === id ? { ...c, list_id: "" } : c)),
+        }));
+      },
       deleteContacts: (ids) => {
         const set2 = new Set(ids);
         set((s) => ({ contacts: s.contacts.filter((c) => !set2.has(c.id)) }));
