@@ -90,7 +90,9 @@ function ContactsPage() {
   const addContact = useDB((s) => s.addContact);
   const importContacts = useDB((s) => s.importContacts);
   const deleteContacts = useDB((s) => s.deleteContacts);
+  const deleteList = useDB((s) => s.deleteList);
 
+  const [deletingListId, setDeletingListId] = useState<string | null>(null);
   const [activeListId, setActiveListId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
