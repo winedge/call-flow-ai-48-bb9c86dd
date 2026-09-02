@@ -25,9 +25,33 @@ type ReflectionRow = {
   next_attempt_at: string | null;
   success_score: number | null;
   success_label: string | null;
+  key_learnings: unknown;
   created_at: string;
   updated_at: string;
 };
+
+function learningsOf(row: ReflectionRow): string[] {
+  if (!Array.isArray(row.key_learnings)) return [];
+  return row.key_learnings.filter((x): x is string => typeof x === "string" && x.trim().length > 0);
+}
+
+/** Most recent, de-duplicated learnings across successful reflections. */
+function topLearnings(rows: ReflectionRow[] | null, max = 4): string[] {
+  if (!rows) return [];
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const r of rows) {
+    if (r.status !== "success") continue;
+    for (const l of learningsOf(r)) {
+      const k = l.toLowerCase().replace(/[^a-z0-9 ]/g, "").slice(0, 60);
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(l);
+      if (out.length >= max) return out;
+    }
+  }
+  return out;
+}
 
 const POLL_MS = 20_000;
 
