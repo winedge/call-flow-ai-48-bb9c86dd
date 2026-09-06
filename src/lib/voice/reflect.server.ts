@@ -277,6 +277,10 @@ export async function reflectOnCall({ callId }: ReflectInput): Promise<void> {
   const call = callRaw as unknown as CallRow;
   if (!call.agent_id || call.status !== "completed") return;
 
+  // Learning loop is opt-in per workspace (Settings → Workspace defaults).
+  if (!(await isLearningEnabled(call.user_id))) return;
+
+
   const row = await ensureReflectionRow(call);
   if (!row) {
     console.error("[reflect] could not create reflection row for", callId);
