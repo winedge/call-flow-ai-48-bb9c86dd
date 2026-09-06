@@ -266,6 +266,10 @@ async function loadAll(userId: UUID) {
     has_twilio: Boolean(settingsRow.data?.has_twilio ?? false),
     has_elevenlabs: Boolean(settingsRow.data?.has_elevenlabs ?? false),
     has_openai: Boolean(settingsRow.data?.has_openai ?? false),
+    learning_enabled: Boolean(
+      (settingsRow.data as { learning_enabled?: boolean } | null)?.learning_enabled ?? false,
+    ),
+
   };
 
   useDB.setState({
