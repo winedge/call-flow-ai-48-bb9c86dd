@@ -198,6 +198,24 @@ function SettingsPage() {
               <FieldRow label="Webhook URL">
                 <Input defaultValue={settings?.webhook_url ?? ""} placeholder="https://yourapp.com/webhooks/medical-calling-ai" onBlur={(e) => saveWebhook(e.target.value)} />
               </FieldRow>
+              <FieldRow label="AI learning loop">
+                <div className="flex items-center gap-3">
+                  <Switch
+                    checked={settings?.learning_enabled ?? false}
+                    onCheckedChange={(v) => {
+                      saveSettings({ learning_enabled: v });
+                      if (settings) void persistSettings({ ...settings, learning_enabled: v });
+                      toast.success(v ? "AI learning enabled" : "AI learning disabled");
+                    }}
+                  />
+                  <span className="text-[11px] text-neutral-500">
+                    {settings?.learning_enabled
+                      ? "Agents review completed calls and update their playbooks."
+                      : "Off - completed calls are not analysed."}
+                  </span>
+                </div>
+              </FieldRow>
+
             </div>
           </Card>
           <Card title="SMTP">
