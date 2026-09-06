@@ -70,60 +70,26 @@ export function AuthPage() {
         </Link>
 
         <div className="bg-white ring-1 ring-black/5 rounded-xl p-6 backdrop-blur-sm">
-          <Tabs defaultValue="signin">
-            <TabsList className="grid grid-cols-2 w-full mb-6">
-              <TabsTrigger value="signin">Sign in</TabsTrigger>
-              <TabsTrigger value="signup">Sign up</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="signin" className="space-y-4">
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email-in">Email</Label>
-                  <Input id="email-in" name="email-in" type="email" required placeholder="you@company.com" />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="pw-in">Password</Label>
-                    <Link to="/auth/forgot-password" className="text-[11px] text-brand-primary hover:underline">
-                      Forgot?
-                    </Link>
-                  </div>
-                  <Input id="pw-in" name="pw-in" type="password" required />
-                </div>
-                <Button type="submit" className="w-full bg-brand-primary text-primary-foreground hover:bg-brand-primary hover:brightness-110" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign in"}
-                </Button>
-                <Button type="button" variant="outline" className="w-full" onClick={handleGoogle}>
-                  Continue with Google
-                </Button>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="signup" className="space-y-4">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name-up">Full name</Label>
-                  <Input id="name-up" name="name-up" required placeholder="Ada Lovelace" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email-up">Work email</Label>
-                  <Input id="email-up" name="email-up" type="email" required placeholder="you@company.com" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="pw-up">Password</Label>
-                  <Input id="pw-up" name="pw-up" type="password" required minLength={8} />
-                </div>
-                <Button type="submit" className="w-full bg-brand-primary text-primary-foreground hover:bg-brand-primary hover:brightness-110" disabled={loading}>
-                  {loading ? "Creating..." : "Create account"}
-                </Button>
-                <Button type="button" variant="outline" className="w-full" onClick={handleGoogle}>
-                  Continue with Google
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
+          <form onSubmit={handleSignIn} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email-in">Email</Label>
+              <Input id="email-in" name="email-in" type="email" required placeholder="you@company.com" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pw-in">Password</Label>
+                <Link to="/auth/forgot-password" className="text-[11px] text-brand-primary hover:underline">
+                  Forgot?
+                </Link>
+              </div>
+              <Input id="pw-in" name="pw-in" type="password" required />
+            </div>
+            <Button type="submit" className="w-full bg-brand-primary text-primary-foreground hover:bg-brand-primary hover:brightness-110" disabled={loading}>
+              {loading ? "Signing in..." : "Sign in"}
+            </Button>
+          </form>
         </div>
+
       </div>
     </div>
   );
