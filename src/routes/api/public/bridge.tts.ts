@@ -13,6 +13,7 @@ import { z } from "zod";
 import { verifyBridge } from "@/lib/voice/bridge-auth";
 import { errorJson, json, preflight } from "@/lib/api/cors";
 import { mixOfficeAmbience } from "@/lib/voice/ambience";
+import { cred } from "@/lib/config/credentials";
 
 const GATEWAY = "https://connector-gateway.lovable.dev/replicate/v1";
 const MODEL = "jaaari/kokoro-82m";
@@ -134,7 +135,7 @@ async function synthesizeElevenLabs(
     use_speaker_boost?: boolean;
   },
 ): Promise<{ audio_url: string } | { error: string; status: number }> {
-  const apiKey = process.env.ELEVENLABS_API_KEY;
+  const apiKey = (await cred("ELEVENLABS_API_KEY"));
   if (!apiKey) return { error: "ElevenLabs not configured", status: 500 };
 
   const voice_settings = {

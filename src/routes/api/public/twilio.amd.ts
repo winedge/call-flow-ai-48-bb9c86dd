@@ -15,6 +15,7 @@
  * agent_id is passed in the query string when we originate the call.
  */
 import { createFileRoute } from "@tanstack/react-router";
+import { cred } from "@/lib/config/credentials";
 
 function escapeXml(s: string): string {
   return s.replace(/[<>&"']/g, (c) => ({
@@ -48,8 +49,8 @@ async function loadAgentVoicemail(
 }
 
 async function modifyCall(callSid: string, twiml: string): Promise<void> {
-  const sid = process.env.TWILIO_ACCOUNT_SID;
-  const token = process.env.TWILIO_AUTH_TOKEN;
+  const sid = (await cred("TWILIO_ACCOUNT_SID"));
+  const token = (await cred("TWILIO_AUTH_TOKEN"));
   if (!sid || !token) return;
   const basic = btoa(`${sid}:${token}`);
   await fetch(

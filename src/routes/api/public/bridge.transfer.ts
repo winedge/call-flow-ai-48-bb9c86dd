@@ -13,6 +13,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { verifyBridge } from "@/lib/voice/bridge-auth";
 import { errorJson, json, preflight } from "@/lib/api/cors";
+import { cred } from "@/lib/config/credentials";
 
 export const Route = createFileRoute("/api/public/bridge/transfer")({
   server: {
@@ -38,9 +39,9 @@ export const Route = createFileRoute("/api/public/bridge/transfer")({
           return errorJson(400, "transfer_number must be E.164 (+15551234567)");
         }
 
-        const sid = process.env.TWILIO_ACCOUNT_SID;
-        const token = process.env.TWILIO_AUTH_TOKEN;
-        const publicUrl = process.env.PUBLIC_APP_URL;
+        const sid = (await cred("TWILIO_ACCOUNT_SID"));
+        const token = (await cred("TWILIO_AUTH_TOKEN"));
+        const publicUrl = (await cred("PUBLIC_APP_URL"));
         if (!sid || !token || !publicUrl) {
           return errorJson(
             500,

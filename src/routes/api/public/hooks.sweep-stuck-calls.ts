@@ -13,6 +13,7 @@
  */
 import { createFileRoute } from "@tanstack/react-router";
 import { json } from "@/lib/api/cors";
+import { cred } from "@/lib/config/credentials";
 
 const RECONCILE_AFTER_MS = 45 * 1000;
 const PRE_CONNECT_TIMEOUT_MS = 2 * 60 * 1000;
@@ -55,8 +56,8 @@ function twilioEndReason(rawStatus: string | undefined, mapped: string): string 
 }
 
 async function fetchTwilioCall(callSid: string): Promise<TwilioCall | null> {
-  const sid = process.env.TWILIO_ACCOUNT_SID;
-  const token = process.env.TWILIO_AUTH_TOKEN;
+  const sid = (await cred("TWILIO_ACCOUNT_SID"));
+  const token = (await cred("TWILIO_AUTH_TOKEN"));
   if (!sid || !token || !callSid) return null;
 
   const basic = btoa(`${sid}:${token}`);

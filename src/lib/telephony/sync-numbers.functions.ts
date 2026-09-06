@@ -4,6 +4,7 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { cred } from "@/lib/config/credentials";
 
 export type SyncResult =
   | { ok: true; added: number; updated: number; total: number }
@@ -12,8 +13,8 @@ export type SyncResult =
 export const syncTwilioNumbers = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<SyncResult> => {
-    const sid = process.env.TWILIO_ACCOUNT_SID;
-    const token = process.env.TWILIO_AUTH_TOKEN;
+    const sid = (await cred("TWILIO_ACCOUNT_SID"));
+    const token = (await cred("TWILIO_AUTH_TOKEN"));
     if (!sid || !token) {
       return {
         ok: false,

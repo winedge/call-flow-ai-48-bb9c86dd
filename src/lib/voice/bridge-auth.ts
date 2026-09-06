@@ -5,6 +5,7 @@
  * sends `X-Bridge-Timestamp` + `X-Bridge-Signature` (hex). We verify and
  * reject anything older than 5 minutes to block replay.
  */
+import { cred } from "@/lib/config/credentials";
 
 const MAX_SKEW_MS = 5 * 60 * 1000;
 
@@ -40,7 +41,7 @@ export async function signBridge(
 }
 
 export async function verifyBridge(request: Request, rawBody: string): Promise<boolean> {
-  const secret = process.env.BRIDGE_SHARED_SECRET;
+  const secret = (await cred("BRIDGE_SHARED_SECRET"));
   if (!secret) return false;
   const ts = request.headers.get("x-bridge-timestamp");
   const sig = request.headers.get("x-bridge-signature");

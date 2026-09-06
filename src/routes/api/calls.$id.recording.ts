@@ -13,6 +13,7 @@
  */
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
+import { cred } from "@/lib/config/credentials";
 
 export const Route = createFileRoute("/api/calls/$id/recording")({
   server: {
@@ -60,8 +61,8 @@ export const Route = createFileRoute("/api/calls/$id/recording")({
           return new Response("No recording", { status: 404 });
         }
 
-        const sid = process.env.TWILIO_ACCOUNT_SID;
-        const authToken = process.env.TWILIO_AUTH_TOKEN;
+        const sid = (await cred("TWILIO_ACCOUNT_SID"));
+        const authToken = (await cred("TWILIO_AUTH_TOKEN"));
         if (!sid || !authToken) {
           return new Response("Twilio not configured", { status: 500 });
         }

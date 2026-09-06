@@ -5,6 +5,7 @@
  * same format directly, so the whole mix stays in-band with no resampling.
  */
 import ambienceAsset from "@/assets/office-ambience.ulaw.asset.json";
+import { cred } from "@/lib/config/credentials";
 
 // ---- μ-law ↔ linear PCM ----------------------------------------------------
 
@@ -47,7 +48,7 @@ async function fetchAmbience(originHint?: string): Promise<Uint8Array | null> {
     // the request so the Worker fetch can resolve it.
     const base =
       originHint ??
-      process.env.PUBLIC_APP_URL ??
+      (await cred("PUBLIC_APP_URL")) ??
       "https://call-flow-ai-48.lovable.app";
     const url = new URL(ambienceAsset.url, base).toString();
     try {

@@ -6,6 +6,7 @@
  * hooks can trigger outbound calls.
  */
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { cred } from "@/lib/config/credentials";
 
 interface DialArgs {
   userId: string;
@@ -22,10 +23,10 @@ interface DialResult {
 }
 
 export async function dialOutbound(args: DialArgs): Promise<DialResult> {
-  const sid = process.env.TWILIO_ACCOUNT_SID;
-  const token = process.env.TWILIO_AUTH_TOKEN;
-  const publicUrl = process.env.PUBLIC_APP_URL;
-  const bridgeUrl = process.env.BRIDGE_URL;
+  const sid = (await cred("TWILIO_ACCOUNT_SID"));
+  const token = (await cred("TWILIO_AUTH_TOKEN"));
+  const publicUrl = (await cred("PUBLIC_APP_URL"));
+  const bridgeUrl = (await cred("BRIDGE_URL"));
   const missing = [
     ["TWILIO_ACCOUNT_SID", sid],
     ["TWILIO_AUTH_TOKEN", token],
