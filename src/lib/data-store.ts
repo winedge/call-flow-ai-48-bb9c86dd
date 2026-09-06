@@ -363,6 +363,8 @@ export const useDB = create<DBState>()(
               has_twilio: false,
               has_elevenlabs: false,
               has_openai: false,
+              learning_enabled: false,
+
             },
           ],
           currentOrgId: org.id,
