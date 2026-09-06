@@ -6,6 +6,7 @@
  * callerId is TWILIO_FROM_NUMBER so the transfer target sees a valid caller.
  */
 import { createFileRoute } from "@tanstack/react-router";
+import { cred } from "@/lib/config/credentials";
 
 function escapeXml(s: string): string {
   return s.replace(/[<>&"']/g, (c) => ({
@@ -20,7 +21,7 @@ function escapeXml(s: string): string {
 async function handle(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const to = url.searchParams.get("to") ?? "";
-  const from = process.env.TWILIO_FROM_NUMBER ?? "";
+  const from = (await cred("TWILIO_FROM_NUMBER")) ?? "";
 
   let twiml: string;
   if (!/^\+\d{8,15}$/.test(to)) {

@@ -13,6 +13,7 @@
  *     status/end-reason webhooks persist end-to-end.
  */
 import { createFileRoute } from "@tanstack/react-router";
+import { cred } from "@/lib/config/credentials";
 
 function escapeXml(s: string): string {
   return s.replace(/[<>&"']/g, (c) => ({
@@ -78,7 +79,7 @@ export const Route = createFileRoute("/api/public/twilio/voice")({
         const isInbound =
           !agentId && (direction === "inbound" || direction === "");
 
-        const bridge = process.env.BRIDGE_URL;
+        const bridge = (await cred("BRIDGE_URL"));
         if (!bridge) {
           return sayAndHangup("The voice bridge is not configured. Goodbye.");
         }

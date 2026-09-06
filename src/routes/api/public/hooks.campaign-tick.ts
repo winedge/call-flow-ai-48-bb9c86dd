@@ -15,6 +15,7 @@
  */
 import { createFileRoute } from "@tanstack/react-router";
 import { dialOutbound } from "@/lib/voice/telephony/dial.server";
+import { cred } from "@/lib/config/credentials";
 
 const MAX_CONCURRENT_PER_CAMPAIGN = 10;
 const QUEUED_SLOT_WINDOW_MS = 2 * 60 * 1000;
@@ -225,7 +226,7 @@ export const Route = createFileRoute("/api/public/hooks/campaign-tick")({
         for (const c of campaigns) {
           // Resolve outbound number: campaign's assigned phone_number_id, else
           // the tenant default TWILIO_FROM_NUMBER.
-          let fromNumber = process.env.TWILIO_FROM_NUMBER ?? "";
+          let fromNumber = (await cred("TWILIO_FROM_NUMBER")) ?? "";
           if (c.phone_number_id) {
             const { data: pn } = await admin
               .from("phone_numbers")

@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { cred } from "@/lib/config/credentials";
 
 export type ElevenLabsTestResult =
   | {
@@ -14,7 +15,7 @@ export type ElevenLabsTestResult =
 export const testElevenLabs = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async (): Promise<ElevenLabsTestResult> => {
-    const apiKey = process.env.ELEVENLABS_API_KEY;
+    const apiKey = (await cred("ELEVENLABS_API_KEY"));
     if (!apiKey) {
       return { ok: false, message: "ELEVENLABS_API_KEY is not configured on the server." };
     }

@@ -5,6 +5,7 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { cred } from "@/lib/config/credentials";
 
 export type CheckStatus = "pass" | "warn" | "fail";
 export interface CheckResult {
@@ -19,8 +20,8 @@ const Input = z.object({
 });
 
 async function checkTwilio(from: string): Promise<CheckResult> {
-  const sid = process.env.TWILIO_ACCOUNT_SID;
-  const token = process.env.TWILIO_AUTH_TOKEN;
+  const sid = (await cred("TWILIO_ACCOUNT_SID"));
+  const token = (await cred("TWILIO_AUTH_TOKEN"));
   if (!sid || !token) {
     return {
       id: "twilio",
@@ -94,8 +95,8 @@ async function checkTwilio(from: string): Promise<CheckResult> {
 }
 
 async function checkBridge(): Promise<CheckResult> {
-  const bridge = process.env.BRIDGE_URL;
-  const secret = process.env.BRIDGE_SHARED_SECRET;
+  const bridge = (await cred("BRIDGE_URL"));
+  const secret = (await cred("BRIDGE_SHARED_SECRET"));
   if (!bridge) {
     return {
       id: "bridge",

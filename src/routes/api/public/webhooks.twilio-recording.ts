@@ -13,9 +13,10 @@
  */
 import { createFileRoute } from "@tanstack/react-router";
 import { errorJson, json, preflight } from "@/lib/api/cors";
+import { cred } from "@/lib/config/credentials";
 
 async function verifyTwilio(request: Request, raw: string): Promise<boolean> {
-  const token = process.env.TWILIO_AUTH_TOKEN;
+  const token = (await cred("TWILIO_AUTH_TOKEN"));
   if (!token) return true;
   const signature = request.headers.get("x-twilio-signature");
   if (!signature) return false;

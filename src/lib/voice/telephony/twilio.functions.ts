@@ -21,6 +21,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { cred } from "@/lib/config/credentials";
 
 const InputSchema = z.object({
   to: z.string().regex(/^\+\d{8,15}$/, "E.164 phone number required"),
@@ -33,11 +34,11 @@ export const initiateCall = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => InputSchema.parse(data))
   .handler(async ({ data, context }): Promise<{ callSid: string; callId: string }> => {
-    const sid = process.env.TWILIO_ACCOUNT_SID;
-    const token = process.env.TWILIO_AUTH_TOKEN;
-    const from = process.env.TWILIO_FROM_NUMBER;
-    const publicUrl = process.env.PUBLIC_APP_URL;
-    const bridgeUrl = process.env.BRIDGE_URL;
+    const sid = (await cred("TWILIO_ACCOUNT_SID"));
+    const token = (await cred("TWILIO_AUTH_TOKEN"));
+    const from = (await cred("TWILIO_FROM_NUMBER"));
+    const publicUrl = (await cred("PUBLIC_APP_URL"));
+    const bridgeUrl = (await cred("BRIDGE_URL"));
     const missing = [
       ["TWILIO_ACCOUNT_SID", sid],
       ["TWILIO_AUTH_TOKEN", token],

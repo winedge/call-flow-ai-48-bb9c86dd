@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { cred } from "@/lib/config/credentials";
 
 export type ElevenLabsVoice = {
   voice_id: string;
@@ -16,7 +17,7 @@ export type ListVoicesResult =
 export const listElevenLabsVoices = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async (): Promise<ListVoicesResult> => {
-    const apiKey = process.env.ELEVENLABS_API_KEY;
+    const apiKey = (await cred("ELEVENLABS_API_KEY"));
     if (!apiKey) return { ok: false, message: "ELEVENLABS_API_KEY is not configured." };
 
     const res = await fetch("https://api.elevenlabs.io/v2/voices?page_size=100", {
@@ -45,7 +46,7 @@ export const previewElevenLabsVoice = createServerFn({ method: "POST" })
     return { voiceId: i.voiceId, text };
   })
   .handler(async ({ data }): Promise<PreviewResult> => {
-    const apiKey = process.env.ELEVENLABS_API_KEY;
+    const apiKey = (await cred("ELEVENLABS_API_KEY"));
     if (!apiKey) return { ok: false, message: "ELEVENLABS_API_KEY is not configured." };
 
     const res = await fetch(

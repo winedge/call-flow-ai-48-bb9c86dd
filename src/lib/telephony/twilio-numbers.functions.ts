@@ -3,6 +3,7 @@
  * Uses TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN saved in Admin → Secrets.
  */
 import { createServerFn } from "@tanstack/react-start";
+import { cred } from "@/lib/config/credentials";
 
 export type TwilioNumber = {
   sid: string;
@@ -19,8 +20,8 @@ export type TwilioNumbersResult =
 
 export const listTwilioNumbers = createServerFn({ method: "GET" }).handler(
   async (): Promise<TwilioNumbersResult> => {
-    const sid = process.env.TWILIO_ACCOUNT_SID;
-    const token = process.env.TWILIO_AUTH_TOKEN;
+    const sid = (await cred("TWILIO_ACCOUNT_SID"));
+    const token = (await cred("TWILIO_AUTH_TOKEN"));
     if (!sid || !token) {
       return {
         ok: false,
