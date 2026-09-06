@@ -269,6 +269,8 @@ export type OrgSettings = {
   has_twilio: boolean;
   has_elevenlabs: boolean;
   has_openai: boolean;
+  learning_enabled: boolean;
+
 };
 
 // ============================================================
