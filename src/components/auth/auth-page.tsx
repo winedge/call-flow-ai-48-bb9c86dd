@@ -34,33 +34,6 @@ export function AuthPage() {
     navigate({ to: "/dashboard" });
   }
 
-  async function handleSignUp(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const fullName = (form.elements.namedItem("name-up") as HTMLInputElement).value;
-    const email = (form.elements.namedItem("email-up") as HTMLInputElement).value;
-    const password = (form.elements.namedItem("pw-up") as HTMLInputElement).value;
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
-        data: { full_name: fullName },
-      },
-    });
-    setLoading(false);
-    if (error) return toast.error(error.message);
-    toast.success("Account created - you're signed in");
-    navigate({ to: "/dashboard" });
-  }
-
-  async function handleGoogle() {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) toast.error(result.error.message ?? "Google sign-in failed");
-  }
 
   return (
     <div className="min-h-screen bg-surface-base flex items-center justify-center p-4">
