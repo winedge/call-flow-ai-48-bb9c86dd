@@ -266,6 +266,10 @@ async function loadAll(userId: UUID) {
     has_twilio: Boolean(settingsRow.data?.has_twilio ?? false),
     has_elevenlabs: Boolean(settingsRow.data?.has_elevenlabs ?? false),
     has_openai: Boolean(settingsRow.data?.has_openai ?? false),
+    learning_enabled: Boolean(
+      (settingsRow.data as { learning_enabled?: boolean } | null)?.learning_enabled ?? false,
+    ),
+
   };
 
   useDB.setState({
@@ -558,5 +562,7 @@ export async function persistSettings(s: OrgSettings) {
     smtp_host: s.smtp_host,
     smtp_user: s.smtp_user,
     smtp_port: s.smtp_port,
+    learning_enabled: s.learning_enabled,
+
   });
 }

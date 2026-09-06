@@ -542,6 +542,7 @@ export type Database = {
           has_elevenlabs: boolean
           has_openai: boolean
           has_twilio: boolean
+          learning_enabled: boolean
           smtp_host: string
           smtp_port: number
           smtp_user: string
@@ -555,6 +556,7 @@ export type Database = {
           has_elevenlabs?: boolean
           has_openai?: boolean
           has_twilio?: boolean
+          learning_enabled?: boolean
           smtp_host?: string
           smtp_port?: number
           smtp_user?: string
@@ -568,6 +570,7 @@ export type Database = {
           has_elevenlabs?: boolean
           has_openai?: boolean
           has_twilio?: boolean
+          learning_enabled?: boolean
           smtp_host?: string
           smtp_port?: number
           smtp_user?: string

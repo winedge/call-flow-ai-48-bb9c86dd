@@ -269,6 +269,8 @@ export type OrgSettings = {
   has_twilio: boolean;
   has_elevenlabs: boolean;
   has_openai: boolean;
+  learning_enabled: boolean;
+
 };
 
 // ============================================================
@@ -361,6 +363,8 @@ export const useDB = create<DBState>()(
               has_twilio: false,
               has_elevenlabs: false,
               has_openai: false,
+              learning_enabled: false,
+
             },
           ],
           currentOrgId: org.id,
