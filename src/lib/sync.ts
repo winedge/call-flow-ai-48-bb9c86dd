@@ -562,5 +562,7 @@ export async function persistSettings(s: OrgSettings) {
     smtp_host: s.smtp_host,
     smtp_user: s.smtp_user,
     smtp_port: s.smtp_port,
+    learning_enabled: s.learning_enabled,
+
   });
 }
