@@ -52,32 +52,59 @@ function listNameFromFile(fileName: string) {
   return fileName.replace(/\.[^.]+$/, "").trim() || "Imported contacts";
 }
 
+function pick(row: Record<string, string>, keys: string[]) {
+  for (const key of Object.keys(row)) {
+    const norm = key.trim().toLowerCase().replace(/[\s_-]+/g, "");
+    if (keys.includes(norm)) {
+      const value = row[key];
+      if (value != null && String(value).trim() !== "") return String(value).trim();
+    }
+  }
+  return "";
+}
+
+function normalizePhone(raw: string) {
+  if (!raw) return "";
+  const trimmed = raw.trim();
+  const plus = trimmed.startsWith("+");
+  let digits = trimmed.replace(/\D/g, "");
+  if (!digits) return "";
+  if (!plus && digits.length === 10) digits = `1${digits}`;
+  return `+${digits}`;
+}
+
 function csvRowsToContacts(rows: Record<string, string>[], listId: string | null) {
   let invalid = 0;
   const contacts: ContactDraft[] = [];
   for (const row of rows) {
-    const phone = (row.phone ?? row.Phone ?? "").trim();
+    const phone = normalizePhone(
+      pick(row, ["phone", "phonenumber", "mobile", "cell", "telephone", "tel", "number"]),
+    );
     if (!PHONE_RE.test(phone)) {
       invalid++;
       continue;
     }
+    const name =
+      pick(row, ["name", "fullname", "contactname"]) ||
+      [pick(row, ["firstname"]), pick(row, ["lastname"])].filter(Boolean).join(" ");
     contacts.push({
       list_id: listId,
-      name: (row.name ?? row.Name ?? "").trim(),
-      company: (row.company ?? row.Company ?? "").trim(),
+      name,
+      company: pick(row, ["company", "organization", "org"]),
       phone,
-      email: (row.email ?? row.Email ?? "").trim(),
+      email: pick(row, ["email", "emailaddress"]),
       custom_vars: {},
-      tags: (row.tags ?? row.Tags ?? "")
+      tags: pick(row, ["tags"])
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean),
-      notes: (row.notes ?? row.Notes ?? "").trim(),
+      notes: pick(row, ["notes", "note"]),
       status: "new",
     });
   }
   return { contacts, invalid };
 }
+
 
 function ContactsPage() {
   const hydrated = useDB((s) => s.hydrated);
@@ -343,6 +370,14 @@ function ContactsPage() {
               lists={lists}
               onAdd={(c) => addContact(c)}
             />
+            <ImportCsvDialog
+              lists={lists}
+              currentFilterListId={activeListId && activeListId !== "__unassigned__" ? activeListId : "all"}
+              createList={createList}
+              importContacts={importContacts}
+              onImported={(listId) => setActiveListId(listId)}
+            />
+
           </div>
         }
       />

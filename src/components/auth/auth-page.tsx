@@ -6,9 +6,8 @@ import logoAsset from "@/assets/logo.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
+
 
 export function AuthPage() {
   const navigate = useNavigate();
@@ -34,33 +33,6 @@ export function AuthPage() {
     navigate({ to: "/dashboard" });
   }
 
-  async function handleSignUp(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const fullName = (form.elements.namedItem("name-up") as HTMLInputElement).value;
-    const email = (form.elements.namedItem("email-up") as HTMLInputElement).value;
-    const password = (form.elements.namedItem("pw-up") as HTMLInputElement).value;
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
-        data: { full_name: fullName },
-      },
-    });
-    setLoading(false);
-    if (error) return toast.error(error.message);
-    toast.success("Account created - you're signed in");
-    navigate({ to: "/dashboard" });
-  }
-
-  async function handleGoogle() {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) toast.error(result.error.message ?? "Google sign-in failed");
-  }
 
   return (
     <div className="min-h-screen bg-surface-base flex items-center justify-center p-4">
@@ -70,60 +42,26 @@ export function AuthPage() {
         </Link>
 
         <div className="bg-white ring-1 ring-black/5 rounded-xl p-6 backdrop-blur-sm">
-          <Tabs defaultValue="signin">
-            <TabsList className="grid grid-cols-2 w-full mb-6">
-              <TabsTrigger value="signin">Sign in</TabsTrigger>
-              <TabsTrigger value="signup">Sign up</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="signin" className="space-y-4">
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email-in">Email</Label>
-                  <Input id="email-in" name="email-in" type="email" required placeholder="you@company.com" />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="pw-in">Password</Label>
-                    <Link to="/auth/forgot-password" className="text-[11px] text-brand-primary hover:underline">
-                      Forgot?
-                    </Link>
-                  </div>
-                  <Input id="pw-in" name="pw-in" type="password" required />
-                </div>
-                <Button type="submit" className="w-full bg-brand-primary text-primary-foreground hover:bg-brand-primary hover:brightness-110" disabled={loading}>
-                  {loading ? "Signing in..." : "Sign in"}
-                </Button>
-                <Button type="button" variant="outline" className="w-full" onClick={handleGoogle}>
-                  Continue with Google
-                </Button>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="signup" className="space-y-4">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name-up">Full name</Label>
-                  <Input id="name-up" name="name-up" required placeholder="Ada Lovelace" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email-up">Work email</Label>
-                  <Input id="email-up" name="email-up" type="email" required placeholder="you@company.com" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="pw-up">Password</Label>
-                  <Input id="pw-up" name="pw-up" type="password" required minLength={8} />
-                </div>
-                <Button type="submit" className="w-full bg-brand-primary text-primary-foreground hover:bg-brand-primary hover:brightness-110" disabled={loading}>
-                  {loading ? "Creating..." : "Create account"}
-                </Button>
-                <Button type="button" variant="outline" className="w-full" onClick={handleGoogle}>
-                  Continue with Google
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
+          <form onSubmit={handleSignIn} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email-in">Email</Label>
+              <Input id="email-in" name="email-in" type="email" required placeholder="you@company.com" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pw-in">Password</Label>
+                <Link to="/auth/forgot-password" className="text-[11px] text-brand-primary hover:underline">
+                  Forgot?
+                </Link>
+              </div>
+              <Input id="pw-in" name="pw-in" type="password" required />
+            </div>
+            <Button type="submit" className="w-full bg-brand-primary text-primary-foreground hover:bg-brand-primary hover:brightness-110" disabled={loading}>
+              {loading ? "Signing in..." : "Sign in"}
+            </Button>
+          </form>
         </div>
+
       </div>
     </div>
   );
