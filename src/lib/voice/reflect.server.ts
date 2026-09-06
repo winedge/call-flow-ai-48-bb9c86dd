@@ -259,8 +259,28 @@ async function markSkipped(rowId: string, reason: string) {
 }
 
 // ---------------------------------------------------------------------------
+// Opt-in gate: the self-learning loop only runs when the workspace has it
+// enabled in Settings. Defaults to off.
+// ---------------------------------------------------------------------------
+
+async function isLearningEnabled(userId: string): Promise<boolean> {
+  const { data, error } = await supabaseAdmin
+    .from("org_settings")
+    .select("learning_enabled")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error) {
+    console.warn("[reflect] settings read failed", error.message);
+    return false;
+  }
+  return Boolean((data as { learning_enabled?: boolean } | null)?.learning_enabled);
+}
+
+// ---------------------------------------------------------------------------
 // Public entry point
 // ---------------------------------------------------------------------------
+
+
 
 export async function reflectOnCall({ callId }: ReflectInput): Promise<void> {
   const { data: callRaw, error: callErr } = await supabaseAdmin
