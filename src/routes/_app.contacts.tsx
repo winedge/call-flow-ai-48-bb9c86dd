@@ -343,6 +343,14 @@ function ContactsPage() {
               lists={lists}
               onAdd={(c) => addContact(c)}
             />
+            <ImportCsvDialog
+              lists={lists}
+              currentFilterListId={activeListId && activeListId !== "__unassigned__" ? activeListId : "all"}
+              createList={createList}
+              importContacts={importContacts}
+              onImported={(listId) => setActiveListId(listId)}
+            />
+
           </div>
         }
       />
