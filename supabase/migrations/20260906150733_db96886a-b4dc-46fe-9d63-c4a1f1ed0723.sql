@@ -1,0 +1,1 @@
+ALTER TABLE public.org_settings ADD COLUMN IF NOT EXISTS learning_enabled boolean NOT NULL DEFAULT false;
