@@ -58,6 +58,13 @@ async function get<T>(path: string): Promise<T> {
   return (await res.json()) as T;
 }
 
+export type VoiceSettings = {
+  stability?: number;
+  similarity_boost?: number;
+  style?: number;
+  use_speaker_boost?: boolean;
+};
+
 export type AgentConfig = {
   id: string;
   name: string;
@@ -67,6 +74,8 @@ export type AgentConfig = {
   system_prompt: string;
   temperature: number;
   speak_first?: boolean;
+  tts_engine?: string;
+  voice_settings?: VoiceSettings;
 };
 
 
@@ -86,6 +95,15 @@ export function synthTts(
   text: string,
   voice: string,
   language: string,
+  engine?: string,
+  voiceSettings?: VoiceSettings,
 ): Promise<{ audio_url: string }> {
-  return post("/api/public/bridge/tts", { text, voice, language });
+  return post("/api/public/bridge/tts", {
+    text,
+    voice,
+    language,
+    engine,
+    voice_settings: voiceSettings,
+  });
 }
+

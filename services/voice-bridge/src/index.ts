@@ -318,18 +318,62 @@ log("info", "listening", { port: PORT, max_sessions: MAX_SESSIONS });
 
 // ---------- Deepgram lifecycle (with reconnect) ----------
 
+/** Words that alone are almost always noise, echo, or a filler grunt. */
+const NOISE_ONLY = new Set([
+  "uh", "uhh", "um", "umm", "mm", "mhm", "hmm", "huh", "ah", "oh", "eh",
+  "hm", "erm", "er", "yeah", "yep", "yup", "ok", "okay", "hello", "hi",
+]);
+
+/** True when a transcript is too thin / too unsure to act on. */
+function isNoise(text: string, confidence: number): boolean {
+  const clean = text.toLowerCase().replace(/[^a-z0-9' ]+/g, " ").trim();
+  if (!clean) return true;
+  const words = clean.split(/\s+/);
+  // Very low confidence on a short phrase = far-end background speech.
+  if (confidence > 0 && confidence < 0.5 && words.length < 4) return true;
+  if (words.length === 1) {
+    // A lone greeting/acknowledgement is real input; a lone grunt is not.
+    if (NOISE_ONLY.has(words[0]) && !["hello", "hi", "yes", "no"].includes(words[0])) return true;
+    if (words[0].length <= 2) return true;
+  }
+  return false;
+}
+
 function openDg(session: Session) {
   session.dg = openDeepgram(DEEPGRAM_KEY, {
-    onInterim: (t) => {
+    onInterim: (t, confidence) => {
+      const words = t.trim().split(/\s+/).filter(Boolean);
       session.pendingUser = t;
-      if (session.speaking && t.trim().length > 2) session.cancelSpeech();
+      // Barge-in only for a confident, multi-word interruption. A single
+      // stray word or low-confidence background voice used to cut the agent
+      // off mid-sentence, which is what made calls fall apart.
+      if (
+        session.speaking &&
+        words.length >= 2 &&
+        t.trim().length > 6 &&
+        (confidence === 0 || confidence >= 0.6)
+      ) {
+        session.cancelSpeech();
+      }
     },
-    onFinal: (t) => {
+    onFinal: (t, confidence) => {
       const text = t.trim();
-      if (!text) return;
       session.pendingUser = "";
+      if (!text) return;
+      if (isNoise(text, confidence)) {
+        log("info", "stt_ignored_noise", {
+          connection_id: session.connectionId,
+          call_sid: session.callSid,
+          confidence,
+        });
+        return;
+      }
+      // Ignore transcripts captured while our own audio is still playing
+      // unless they are substantial - that is usually line echo of the agent.
+      if (session.speaking && text.split(/\s+/).length < 3) return;
       void handleUserTurn(session, text);
     },
+
     onClose: () => {
       if (session.closed) return;
       // Unexpected drop mid-call. Reconnect with exponential backoff.
@@ -373,7 +417,10 @@ function openDg(session: Session) {
 async function handleUserTurn(session: Session, userText: string) {
   if (!session.agent) return;
   if (session.turnLock) {
-    session.history.push({ role: "user", content: userText });
+    // A turn is already in flight. Queue the text so it is answered right
+    // after, instead of silently dropping it (the old behaviour pushed it to
+    // history with no reply, so the agent looked like it ignored the caller).
+    session.queuedUser = [session.queuedUser, userText].filter(Boolean).join(" ");
     return;
   }
   session.turnLock = true;
@@ -407,6 +454,9 @@ async function handleUserTurn(session: Session, userText: string) {
     );
   } finally {
     session.turnLock = false;
+    const queued = session.queuedUser.trim();
+    session.queuedUser = "";
+    if (queued && !session.closed) void handleUserTurn(session, queued);
   }
 }
 
@@ -422,7 +472,10 @@ async function speak(session: Session, text: string) {
       text,
       session.agent.voice_id,
       session.agent.language,
+      session.agent.tts_engine,
+      session.agent.voice_settings,
     );
+
     if (cancelled || session.closed) return;
     const buf = await fetch(audio_url).then((r) => r.arrayBuffer());
     if (cancelled || session.closed) return;
