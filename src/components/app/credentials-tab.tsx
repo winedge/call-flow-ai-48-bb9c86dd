@@ -23,6 +23,11 @@ const LABELS: Record<CredentialKey, { label: string; hint: string; secret: boole
   BRIDGE_SHARED_SECRET: { label: "Voice Bridge Secret", hint: "Must match the bridge service", secret: true },
   PUBLIC_APP_URL: { label: "Public App URL", hint: "Used in Twilio webhooks", secret: false },
   APP_URL: { label: "App URL", hint: "Internal base URL", secret: false },
+  SUPABASE_SERVICE_ROLE_KEY: {
+    label: "Service Role Key",
+    hint: "Backend admin key — required for self-hosted servers",
+    secret: true,
+  },
 };
 
 const SOURCE_TEXT: Record<CredentialEntry["source"], string> = {

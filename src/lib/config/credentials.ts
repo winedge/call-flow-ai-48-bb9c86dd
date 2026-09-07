@@ -20,6 +20,7 @@ export const CREDENTIAL_KEYS = [
   "BRIDGE_SHARED_SECRET",
   "PUBLIC_APP_URL",
   "APP_URL",
+  "SUPABASE_SERVICE_ROLE_KEY",
 ] as const;
 
 export type CredentialKey = (typeof CREDENTIAL_KEYS)[number];
