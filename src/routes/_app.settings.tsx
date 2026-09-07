@@ -25,6 +25,7 @@ import { persistSettings } from "@/lib/sync";
 import { syncTwilioNumbers } from "@/lib/telephony/sync-numbers.functions";
 import { testElevenLabs } from "@/lib/integrations/elevenlabs-test.functions";
 import { Volume2 } from "lucide-react";
+import { CredentialsTab } from "@/components/app/credentials-tab";
 
 
 export const Route = createFileRoute("/_app/settings")({
@@ -102,6 +103,7 @@ function SettingsPage() {
         <TabsList className="mb-6">
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
           <TabsTrigger value="telephony">Telephony</TabsTrigger>
+          <TabsTrigger value="credentials">Credentials</TabsTrigger>
           <TabsTrigger value="webhooks">Webhooks & SMTP</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
@@ -185,6 +187,9 @@ function SettingsPage() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="credentials" className="space-y-6">
+          <CredentialsTab />
+        </TabsContent>
 
         <TabsContent value="webhooks" className="space-y-6">
           <Card title="Workspace defaults">
