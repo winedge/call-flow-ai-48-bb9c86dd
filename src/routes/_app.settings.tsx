@@ -187,6 +187,9 @@ function SettingsPage() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="credentials" className="space-y-6">
+          <CredentialsTab />
+        </TabsContent>
 
         <TabsContent value="webhooks" className="space-y-6">
           <Card title="Workspace defaults">
