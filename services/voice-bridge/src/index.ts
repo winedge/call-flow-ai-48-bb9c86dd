@@ -109,6 +109,8 @@ type Session = {
   speaking: boolean;
   pendingUser: string;
   turnLock: boolean;
+  queuedUser: string;
+
   cancelSpeech: () => void;
   closed: boolean;
   openedAt: number;
@@ -201,6 +203,8 @@ const server = Bun.serve<Ctx>({
         speaking: false,
         pendingUser: "",
         turnLock: false,
+        queuedUser: "",
+
         cancelSpeech: () => {},
         closed: false,
         openedAt: Date.now(),
@@ -479,19 +483,26 @@ async function speak(session: Session, text: string) {
     if (cancelled || session.closed) return;
     const buf = await fetch(audio_url).then((r) => r.arrayBuffer());
     if (cancelled || session.closed) return;
-    const wav = new WaveFile(new Uint8Array(buf));
-    wav.toBitDepth("16");
-    const sampleRate = (wav.fmt as { sampleRate: number }).sampleRate;
-    const rawSamples = wav.getSamples(false) as Float64Array | Float64Array[];
-    const mono = Array.isArray(rawSamples) ? rawSamples[0] : rawSamples;
-    const pcm = new Int16Array(mono.length);
-    for (let i = 0; i < mono.length; i++) {
-      const v = mono[i];
-      pcm[i] = Math.max(-32768, Math.min(32767, Math.round(v)));
+
+    let mu: Uint8Array;
+    if (audio_url.startsWith("data:audio/mulaw")) {
+      // Already 8k μ-law (ElevenLabs path) - forward bytes untouched.
+      mu = new Uint8Array(buf);
+    } else {
+      const wav = new WaveFile(new Uint8Array(buf));
+      wav.toBitDepth("16");
+      const sampleRate = (wav.fmt as { sampleRate: number }).sampleRate;
+      const rawSamples = wav.getSamples(false) as Float64Array | Float64Array[];
+      const mono = Array.isArray(rawSamples) ? rawSamples[0] : rawSamples;
+      const pcm = new Int16Array(mono.length);
+      for (let i = 0; i < mono.length; i++) {
+        const v = mono[i];
+        pcm[i] = Math.max(-32768, Math.min(32767, Math.round(v)));
+      }
+      mu = pcm8kToMuLaw(downsampleTo8k(pcm, sampleRate));
     }
-    const pcm8k = downsampleTo8k(pcm, sampleRate);
-    const mu = pcm8kToMuLaw(pcm8k);
     const frames = chunk20ms(mu);
+
 
     for (const frame of frames) {
       if (cancelled || session.closed) break;
