@@ -107,7 +107,6 @@ function SettingsPage() {
           <TabsTrigger value="webhooks">Webhooks & SMTP</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
-          <TabsTrigger value="api">API</TabsTrigger>
         </TabsList>
 
         <TabsContent value="integrations" className="space-y-6">
@@ -285,25 +284,6 @@ function SettingsPage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="api" className="space-y-6">
-          <Card title="REST API">
-            <p className="text-sm text-neutral-600 mb-4">
-              Programmatic access to campaigns, contacts, calls, and webhooks. Base URL:
-            </p>
-            <div className="flex items-center gap-2 bg-neutral-100 ring-1 ring-black/5 p-3 rounded font-mono text-xs text-neutral-800 mb-4">
-              <span className="truncate">{projectUrl}/api</span>
-              <button className="ml-auto text-neutral-500 hover:text-neutral-900" onClick={() => { navigator.clipboard.writeText(`${projectUrl}/api`); toast.success("Copied"); }}>
-                <Copy className="size-3" />
-              </button>
-            </div>
-            <div className="space-y-2">
-              <Endpoint method="GET" path={`${projectUrl}/api/campaigns`} />
-              <Endpoint method="POST" path={`${projectUrl}/api/campaigns`} />
-              <Endpoint method="GET" path={`${projectUrl}/api/calls`} />
-              <Endpoint method="GET" path={`${projectUrl}/api/openapi.json`} />
-            </div>
-          </Card>
-        </TabsContent>
       </Tabs>
     </>
   );
