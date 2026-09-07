@@ -203,6 +203,8 @@ const server = Bun.serve<Ctx>({
         speaking: false,
         pendingUser: "",
         turnLock: false,
+        queuedUser: "",
+
         cancelSpeech: () => {},
         closed: false,
         openedAt: Date.now(),
