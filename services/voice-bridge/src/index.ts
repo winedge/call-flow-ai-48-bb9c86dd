@@ -109,6 +109,8 @@ type Session = {
   speaking: boolean;
   pendingUser: string;
   turnLock: boolean;
+  queuedUser: string;
+
   cancelSpeech: () => void;
   closed: boolean;
   openedAt: number;
