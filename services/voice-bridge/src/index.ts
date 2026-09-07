@@ -417,7 +417,10 @@ function openDg(session: Session) {
 async function handleUserTurn(session: Session, userText: string) {
   if (!session.agent) return;
   if (session.turnLock) {
-    session.history.push({ role: "user", content: userText });
+    // A turn is already in flight. Queue the text so it is answered right
+    // after, instead of silently dropping it (the old behaviour pushed it to
+    // history with no reply, so the agent looked like it ignored the caller).
+    session.queuedUser = [session.queuedUser, userText].filter(Boolean).join(" ");
     return;
   }
   session.turnLock = true;
@@ -451,6 +454,9 @@ async function handleUserTurn(session: Session, userText: string) {
     );
   } finally {
     session.turnLock = false;
+    const queued = session.queuedUser.trim();
+    session.queuedUser = "";
+    if (queued && !session.closed) void handleUserTurn(session, queued);
   }
 }
 
@@ -466,7 +472,10 @@ async function speak(session: Session, text: string) {
       text,
       session.agent.voice_id,
       session.agent.language,
+      session.agent.tts_engine,
+      session.agent.voice_settings,
     );
+
     if (cancelled || session.closed) return;
     const buf = await fetch(audio_url).then((r) => r.arrayBuffer());
     if (cancelled || session.closed) return;
