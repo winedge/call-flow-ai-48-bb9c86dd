@@ -2,14 +2,19 @@
  * Deepgram streaming STT over WebSocket.
  *
  * We send raw μ-law/8k audio (same format Twilio gives us - zero
- * conversion). Deepgram sends back interim + final transcripts. We only
- * surface finals to the dialog loop; interims are used to detect that the
- * caller is talking so we can barge-in on our current TTS playback.
+ * conversion). Deepgram sends back interim + final transcripts.
+ *
+ * Utterance assembly: `is_final` marks the end of a *segment*, not of the
+ * caller's sentence. Firing a dialog turn per segment made the agent reply
+ * to half-sentences and lose the thread. We instead buffer `is_final`
+ * segments and only emit `onFinal` once Deepgram signals end-of-speech
+ * (`speech_final`) or sends `UtteranceEnd`. Interims carry a confidence so
+ * the caller can ignore background chatter for barge-in.
  */
 
 export type DeepgramCallbacks = {
-  onInterim: (text: string) => void;
-  onFinal: (text: string) => void;
+  onInterim: (text: string, confidence: number) => void;
+  onFinal: (text: string, confidence: number) => void;
   onClose: () => void;
   onError: (err: unknown) => void;
 };
@@ -24,12 +29,30 @@ export function openDeepgram(apiKey: string, cb: DeepgramCallbacks): {
   url.searchParams.set("channels", "1");
   url.searchParams.set("model", "nova-2-phonecall");
   url.searchParams.set("smart_format", "true");
+  url.searchParams.set("punctuate", "true");
   url.searchParams.set("interim_results", "true");
-  url.searchParams.set("endpointing", "300");
+  // Longer endpointing + explicit utterance end: gives the caller room to
+  // finish a thought instead of the agent jumping in after every pause.
+  url.searchParams.set("endpointing", "500");
+  url.searchParams.set("utterance_end_ms", "1200");
   url.searchParams.set("vad_events", "true");
+  // Drop background speech/noise picked up on the far side.
+  url.searchParams.set("filler_words", "false");
 
   const ws = new WebSocket(url.toString(), ["token", apiKey]);
   let closed = false;
+
+  // Buffered `is_final` segments of the current utterance.
+  let buffer: string[] = [];
+  let lastConfidence = 0;
+
+  function flush() {
+    const text = buffer.join(" ").replace(/\s+/g, " ").trim();
+    buffer = [];
+    if (!text) return;
+    cb.onFinal(text, lastConfidence);
+    lastConfidence = 0;
+  }
 
   ws.addEventListener("message", (ev) => {
     try {
@@ -37,14 +60,31 @@ export function openDeepgram(apiKey: string, cb: DeepgramCallbacks): {
         type?: string;
         is_final?: boolean;
         speech_final?: boolean;
-        channel?: { alternatives?: { transcript?: string }[] };
+        channel?: {
+          alternatives?: { transcript?: string; confidence?: number }[];
+        };
       };
-      if (msg.type === "Results") {
-        const text = msg.channel?.alternatives?.[0]?.transcript ?? "";
-        if (!text) return;
-        if (msg.is_final || msg.speech_final) cb.onFinal(text);
-        else cb.onInterim(text);
+
+      if (msg.type === "UtteranceEnd") {
+        flush();
+        return;
       }
+
+      if (msg.type !== "Results") return;
+      const alt = msg.channel?.alternatives?.[0];
+      const text = (alt?.transcript ?? "").trim();
+      const confidence = typeof alt?.confidence === "number" ? alt.confidence : 0;
+
+      if (msg.is_final) {
+        if (text) {
+          buffer.push(text);
+          lastConfidence = confidence || lastConfidence;
+        }
+        if (msg.speech_final) flush();
+        return;
+      }
+
+      if (text) cb.onInterim(text, confidence);
     } catch (e) {
       cb.onError(e);
     }
