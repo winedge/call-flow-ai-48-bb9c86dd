@@ -103,6 +103,7 @@ function SettingsPage() {
         <TabsList className="mb-6">
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
           <TabsTrigger value="telephony">Telephony</TabsTrigger>
+          <TabsTrigger value="credentials">Credentials</TabsTrigger>
           <TabsTrigger value="webhooks">Webhooks & SMTP</TabsTrigger>
           <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
