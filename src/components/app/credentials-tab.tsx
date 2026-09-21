@@ -28,6 +28,16 @@ const LABELS: Record<CredentialKey, { label: string; hint: string; secret: boole
     hint: "Backend admin key — required for self-hosted servers",
     secret: true,
   },
+  OPENROUTER_API_KEY: {
+    label: "OpenRouter API Key",
+    hint: "Starts with sk-or- — when set, all AI replies use OpenRouter",
+    secret: true,
+  },
+  OPENROUTER_MODEL: {
+    label: "OpenRouter Model",
+    hint: "e.g. google/gemini-2.5-flash or openai/gpt-4o-mini",
+    secret: false,
+  },
 };
 
 const SOURCE_TEXT: Record<CredentialEntry["source"], string> = {

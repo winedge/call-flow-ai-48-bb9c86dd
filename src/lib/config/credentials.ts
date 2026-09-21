@@ -21,6 +21,8 @@ export const CREDENTIAL_KEYS = [
   "PUBLIC_APP_URL",
   "APP_URL",
   "SUPABASE_SERVICE_ROLE_KEY",
+  "OPENROUTER_API_KEY",
+  "OPENROUTER_MODEL",
 ] as const;
 
 export type CredentialKey = (typeof CREDENTIAL_KEYS)[number];
