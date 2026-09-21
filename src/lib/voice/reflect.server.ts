@@ -21,7 +21,6 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { chatCompletion } from "@/lib/ai/llm.server";
 
 const MODEL = "google/gemini-3.5-flash";
-const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const PLAYBOOK_MAX_CHARS = 3500;
 
 export const MAX_ATTEMPTS = 5;
