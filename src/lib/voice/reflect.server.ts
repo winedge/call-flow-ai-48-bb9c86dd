@@ -18,9 +18,9 @@
  * re-invokes this function.
  */
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { chatCompletion } from "@/lib/ai/llm.server";
 
 const MODEL = "google/gemini-3.5-flash";
-const GATEWAY = "https://ai.gateway.lovable.dev/v1/chat/completions";
 const PLAYBOOK_MAX_CHARS = 3500;
 
 export const MAX_ATTEMPTS = 5;
@@ -131,51 +131,29 @@ function computeSuccess(call: CallRow, agent: AgentRow): { score: number; label:
 }
 
 async function callGeminiJSON<T>(system: string, user: string): Promise<T> {
-  const apiKey = process.env.LOVABLE_API_KEY;
-  if (!apiKey) throw new Error("LOVABLE_API_KEY missing");
-  const res = await fetch(GATEWAY, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ],
-      response_format: { type: "json_object" },
-    }),
+  const res = await chatCompletion({
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: user },
+    ],
+    fallbackModel: MODEL,
+    json: true,
   });
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    throw new Error(`gateway ${res.status}: ${body.slice(0, 300)}`);
-  }
-  const p = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-  const text = p.choices?.[0]?.message?.content ?? "";
-  return JSON.parse(text) as T;
+  if (!res.ok) throw new Error(res.error ?? "AI request failed");
+  return JSON.parse(res.content) as T;
 }
 
 async function callGeminiText(system: string, user: string): Promise<string> {
-  const apiKey = process.env.LOVABLE_API_KEY;
-  if (!apiKey) throw new Error("LOVABLE_API_KEY missing");
-  const res = await fetch(GATEWAY, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ],
-    }),
+  const res = await chatCompletion({
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: user },
+    ],
+    fallbackModel: MODEL,
   });
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    throw new Error(`gateway ${res.status}: ${body.slice(0, 300)}`);
-  }
-  const p = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-  const out = p.choices?.[0]?.message?.content?.trim() ?? "";
-  if (!out) throw new Error("empty completion");
-  return out;
+  if (!res.ok) throw new Error(res.error ?? "AI request failed");
+  if (!res.content) throw new Error("empty completion");
+  return res.content;
 }
 
 function toStringArray(v: unknown, cap = 6): string[] {

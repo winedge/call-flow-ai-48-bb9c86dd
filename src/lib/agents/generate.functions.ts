@@ -9,6 +9,7 @@
  * for speed/cost. No user API key needed.
  */
 import { createServerFn } from "@tanstack/react-start";
+import { chatCompletion } from "@/lib/ai/llm.server";
 
 export type GeneratedAgent = {
   name: string;
@@ -72,13 +73,6 @@ export const generateAgentFromBrief = createServerFn({ method: "POST" })
     },
   )
   .handler(async ({ data }) => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) {
-      throw new Error(
-        "AI generation is not configured (LOVABLE_API_KEY missing).",
-      );
-    }
-
     const userMsg = [
       `Business brief:\n${data.brief}`,
       data.audience ? `Target audience:\n${data.audience}` : null,
@@ -88,43 +82,29 @@ export const generateAgentFromBrief = createServerFn({ method: "POST" })
       .filter(Boolean)
       .join("\n\n");
 
-    const res = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${key}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
-            { role: "system", content: SYSTEM },
-            { role: "user", content: userMsg },
-          ],
-          response_format: { type: "json_object" },
-          temperature: 0.4,
-        }),
-      },
-    );
+    const ai = await chatCompletion({
+      messages: [
+        { role: "system", content: SYSTEM },
+        { role: "user", content: userMsg },
+      ],
+      fallbackModel: "google/gemini-2.5-flash",
+      temperature: 0.4,
+      json: true,
+    });
 
-    if (!res.ok) {
-      const t = await res.text().catch(() => "");
-      if (res.status === 429) {
+    if (!ai.ok) {
+      if (ai.status === 429) {
         throw new Error("AI is rate-limited - please try again in a moment.");
       }
-      if (res.status === 402) {
+      if (ai.status === 402) {
         throw new Error(
-          "AI credits exhausted for this workspace. Top up in Settings.",
+          "AI credits exhausted. Top up, or add an OpenRouter key in Settings → Credentials.",
         );
       }
-      throw new Error(`AI generation failed (${res.status}): ${t.slice(0, 200)}`);
+      throw new Error(ai.error ?? "AI generation failed");
     }
 
-    const payload = (await res.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-    const content = payload.choices?.[0]?.message?.content ?? "";
+    const content = ai.content;
     let parsed: GeneratedAgent;
     try {
       parsed = JSON.parse(content);

@@ -12,6 +12,8 @@
  * Auth: HMAC via BRIDGE_SHARED_SECRET (see bridge-auth.ts).
  */
 import { createFileRoute } from "@tanstack/react-router";
+
+import { chatCompletion } from "@/lib/ai/llm.server";
 import { verifyBridge } from "@/lib/voice/bridge-auth";
 import { errorJson, json, preflight } from "@/lib/api/cors";
 
@@ -543,8 +545,6 @@ export const Route = createFileRoute("/api/public/bridge/turn")({
         if (!(await verifyBridge(request, raw))) {
           return errorJson(401, "Invalid bridge signature");
         }
-        const key = process.env.LOVABLE_API_KEY;
-        if (!key) return errorJson(500, "LOVABLE_API_KEY not configured");
 
         let body: { agent: AgentSummary; history: Turn[]; call_sid?: string };
         try {
@@ -636,27 +636,16 @@ export const Route = createFileRoute("/api/public/bridge/turn")({
           },
         ];
 
-        const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Lovable-API-Key": key,
-          },
-          body: JSON.stringify({
-            model: MODEL,
-            messages,
-            temperature: body.agent.temperature ?? 0.4,
-            max_tokens: 140,
-          }),
+        const ai = await chatCompletion({
+          messages,
+          fallbackModel: MODEL,
+          temperature: body.agent.temperature ?? 0.4,
+          max_tokens: 140,
         });
-        if (!res.ok) {
-          const t = await res.text().catch(() => "");
-          return errorJson(res.status, `AI Gateway ${res.status}: ${t.slice(0, 200)}`);
+        if (!ai.ok) {
+          return errorJson(ai.status, ai.error ?? "AI request failed");
         }
-        const data = (await res.json()) as {
-          choices?: { message?: { content?: string } }[];
-        };
-        let reply = data.choices?.[0]?.message?.content?.trim() ?? "";
+        let reply = ai.content;
         let endCall = false;
         let transfer = false;
 
