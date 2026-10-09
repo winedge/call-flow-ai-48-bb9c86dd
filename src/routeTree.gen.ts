@@ -9,122 +9,87 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AppAutomationsRouteImport } from './routes/_app.automations'
-import { Route as AppCallHistoryRouteImport } from './routes/_app.call-history'
-import { Route as AppContactsRouteImport } from './routes/_app.contacts'
-import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
-import { Route as AppLaunchRouteImport } from './routes/_app.launch'
-import { Route as AppLiveCallsRouteImport } from './routes/_app.live-calls'
-import { Route as AppSettingsRouteImport } from './routes/_app.settings'
-import { Route as ApiAgentsRouteImport } from './routes/api/agents'
-import { Route as ApiAutomationsRouteImport } from './routes/api/automations'
-import { Route as ApiCallsRouteImport } from './routes/api/calls'
-import { Route as ApiCampaignsRouteImport } from './routes/api/campaigns'
-import { Route as ApiContactsRouteImport } from './routes/api/contacts'
-import { Route as ApiOpenapiDotjsonRouteImport } from './routes/api/openapi[.]json'
-import { Route as AuthForgotPasswordRouteImport } from './routes/auth.forgot-password'
-import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as DocsApiRouteImport } from './routes/docs.api'
-import { Route as AppAgentsIndexRouteImport } from './routes/_app.agents.index'
-import { Route as AppAgentsIdRouteImport } from './routes/_app.agents.$id'
-import { Route as AppCallsIdRouteImport } from './routes/_app.calls.$id'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth.forgot-password'
+import { Route as ApiOpenapiDotjsonRouteImport } from './routes/api/openapi[.]json'
+import { Route as ApiContactsRouteImport } from './routes/api/contacts'
+import { Route as ApiCampaignsRouteImport } from './routes/api/campaigns'
+import { Route as ApiCallsRouteImport } from './routes/api/calls'
+import { Route as ApiAutomationsRouteImport } from './routes/api/automations'
+import { Route as ApiAgentsRouteImport } from './routes/api/agents'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppLiveCallsRouteImport } from './routes/_app.live-calls'
+import { Route as AppLaunchRouteImport } from './routes/_app.launch'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppContactsRouteImport } from './routes/_app.contacts'
+import { Route as AppCallHistoryRouteImport } from './routes/_app.call-history'
+import { Route as AppAutomationsRouteImport } from './routes/_app.automations'
 import { Route as AppCampaignsIndexRouteImport } from './routes/_app.campaigns.index'
-import { Route as AppCampaignsIdRouteImport } from './routes/_app.campaigns.$id'
-import { Route as AppCampaignsNewRouteImport } from './routes/_app.campaigns.new'
-import { Route as ApiAgentsIdRouteImport } from './routes/api/agents.$id'
-import { Route as ApiAutomationsIdRouteImport } from './routes/api/automations.$id'
-import { Route as ApiCallsIdRouteImport } from './routes/api/calls.$id'
-import { Route as ApiCampaignsIdRouteImport } from './routes/api/campaigns.$id'
-import { Route as ApiContactsIdRouteImport } from './routes/api/contacts.$id'
+import { Route as AppAgentsIndexRouteImport } from './routes/_app.agents.index'
 import { Route as ApiPublicTwilioStatusRouteImport } from './routes/api/public/twilio-status'
-import { Route as ApiCallsIdRecordingRouteImport } from './routes/api/calls.$id.recording'
-import { Route as ApiCampaignsIdPauseRouteImport } from './routes/api/campaigns.$id.pause'
-import { Route as ApiCampaignsIdStartRouteImport } from './routes/api/campaigns.$id.start'
-import { Route as ApiPublicBridgeAgentRouteImport } from './routes/api/public/bridge.agent'
-import { Route as ApiPublicBridgeCallEventRouteImport } from './routes/api/public/bridge.call-event'
-import { Route as ApiPublicBridgeTransferRouteImport } from './routes/api/public/bridge.transfer'
-import { Route as ApiPublicBridgeTtsRouteImport } from './routes/api/public/bridge.tts'
-import { Route as ApiPublicBridgeTurnRouteImport } from './routes/api/public/bridge.turn'
-import { Route as ApiPublicHooksCampaignTickRouteImport } from './routes/api/public/hooks.campaign-tick'
-import { Route as ApiPublicHooksRetryReflectionsRouteImport } from './routes/api/public/hooks.retry-reflections'
-import { Route as ApiPublicHooksSweepStuckCallsRouteImport } from './routes/api/public/hooks.sweep-stuck-calls'
-import { Route as ApiPublicTwilioAmdRouteImport } from './routes/api/public/twilio.amd'
-import { Route as ApiPublicTwilioTransferRouteImport } from './routes/api/public/twilio.transfer'
-import { Route as ApiPublicTwilioVoiceRouteImport } from './routes/api/public/twilio.voice'
-import { Route as ApiPublicWebhooksAutomationsRouteImport } from './routes/api/public/webhooks.automations'
-import { Route as ApiPublicWebhooksTwilioRouteImport } from './routes/api/public/webhooks.twilio'
+import { Route as ApiContactsIdRouteImport } from './routes/api/contacts.$id'
+import { Route as ApiCampaignsIdRouteImport } from './routes/api/campaigns.$id'
+import { Route as ApiCallsIdRouteImport } from './routes/api/calls.$id'
+import { Route as ApiAutomationsIdRouteImport } from './routes/api/automations.$id'
+import { Route as ApiAgentsIdRouteImport } from './routes/api/agents.$id'
+import { Route as AppCampaignsNewRouteImport } from './routes/_app.campaigns.new'
+import { Route as AppCampaignsIdRouteImport } from './routes/_app.campaigns.$id'
+import { Route as AppCallsIdRouteImport } from './routes/_app.calls.$id'
+import { Route as AppAgentsIdRouteImport } from './routes/_app.agents.$id'
 import { Route as ApiPublicWebhooksTwilioRecordingRouteImport } from './routes/api/public/webhooks.twilio-recording'
+import { Route as ApiPublicWebhooksTwilioRouteImport } from './routes/api/public/webhooks.twilio'
+import { Route as ApiPublicWebhooksAutomationsRouteImport } from './routes/api/public/webhooks.automations'
+import { Route as ApiPublicTwilioVoiceRouteImport } from './routes/api/public/twilio.voice'
+import { Route as ApiPublicTwilioTransferRouteImport } from './routes/api/public/twilio.transfer'
+import { Route as ApiPublicTwilioAmdRouteImport } from './routes/api/public/twilio.amd'
+import { Route as ApiPublicHooksSweepStuckCallsRouteImport } from './routes/api/public/hooks.sweep-stuck-calls'
+import { Route as ApiPublicHooksRetryReflectionsRouteImport } from './routes/api/public/hooks.retry-reflections'
+import { Route as ApiPublicHooksCampaignTickRouteImport } from './routes/api/public/hooks.campaign-tick'
+import { Route as ApiPublicBridgeTurnRouteImport } from './routes/api/public/bridge.turn'
+import { Route as ApiPublicBridgeTtsRouteImport } from './routes/api/public/bridge.tts'
+import { Route as ApiPublicBridgeTransferRouteImport } from './routes/api/public/bridge.transfer'
+import { Route as ApiPublicBridgeCallEventRouteImport } from './routes/api/public/bridge.call-event'
+import { Route as ApiPublicBridgeAgentRouteImport } from './routes/api/public/bridge.agent'
+import { Route as ApiCampaignsIdStartRouteImport } from './routes/api/campaigns.$id.start'
+import { Route as ApiCampaignsIdPauseRouteImport } from './routes/api/campaigns.$id.pause'
+import { Route as ApiCallsIdRecordingRouteImport } from './routes/api/calls.$id.recording'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppAutomationsRoute = AppAutomationsRouteImport.update({
-  id: '/automations',
-  path: '/automations',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppCallHistoryRoute = AppCallHistoryRouteImport.update({
-  id: '/call-history',
-  path: '/call-history',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppContactsRoute = AppContactsRouteImport.update({
-  id: '/contacts',
-  path: '/contacts',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppLaunchRoute = AppLaunchRouteImport.update({
-  id: '/launch',
-  path: '/launch',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppLiveCallsRoute = AppLiveCallsRouteImport.update({
-  id: '/live-calls',
-  path: '/live-calls',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSettingsRoute = AppSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppRoute,
-} as any)
-const ApiAgentsRoute = ApiAgentsRouteImport.update({
-  id: '/api/agents',
-  path: '/api/agents',
+const DocsApiRoute = DocsApiRouteImport.update({
+  id: '/docs/api',
+  path: '/docs/api',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiAutomationsRoute = ApiAutomationsRouteImport.update({
-  id: '/api/automations',
-  path: '/api/automations',
-  getParentRoute: () => rootRouteImport,
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
 } as any)
-const ApiCallsRoute = ApiCallsRouteImport.update({
-  id: '/api/calls',
-  path: '/api/calls',
-  getParentRoute: () => rootRouteImport,
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthRoute,
 } as any)
-const ApiCampaignsRoute = ApiCampaignsRouteImport.update({
-  id: '/api/campaigns',
-  path: '/api/campaigns',
+const ApiOpenapiDotjsonRoute = ApiOpenapiDotjsonRouteImport.update({
+  id: '/api/openapi.json',
+  path: '/api/openapi.json',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiContactsRoute = ApiContactsRouteImport.update({
@@ -132,39 +97,59 @@ const ApiContactsRoute = ApiContactsRouteImport.update({
   path: '/api/contacts',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiOpenapiDotjsonRoute = ApiOpenapiDotjsonRouteImport.update({
-  id: '/api/openapi.json',
-  path: '/api/openapi.json',
+const ApiCampaignsRoute = ApiCampaignsRouteImport.update({
+  id: '/api/campaigns',
+  path: '/api/campaigns',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => AuthRoute,
-} as any)
-const DocsApiRoute = DocsApiRouteImport.update({
-  id: '/docs/api',
-  path: '/docs/api',
+const ApiCallsRoute = ApiCallsRouteImport.update({
+  id: '/api/calls',
+  path: '/api/calls',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppAgentsIndexRoute = AppAgentsIndexRouteImport.update({
-  id: '/agents/',
-  path: '/agents/',
+const ApiAutomationsRoute = ApiAutomationsRouteImport.update({
+  id: '/api/automations',
+  path: '/api/automations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAgentsRoute = ApiAgentsRouteImport.update({
+  id: '/api/agents',
+  path: '/api/agents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
-const AppAgentsIdRoute = AppAgentsIdRouteImport.update({
-  id: '/agents/$id',
-  path: '/agents/$id',
+const AppLiveCallsRoute = AppLiveCallsRouteImport.update({
+  id: '/live-calls',
+  path: '/live-calls',
   getParentRoute: () => AppRoute,
 } as any)
-const AppCallsIdRoute = AppCallsIdRouteImport.update({
-  id: '/calls/$id',
-  path: '/calls/$id',
+const AppLaunchRoute = AppLaunchRouteImport.update({
+  id: '/launch',
+  path: '/launch',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppContactsRoute = AppContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCallHistoryRoute = AppCallHistoryRouteImport.update({
+  id: '/call-history',
+  path: '/call-history',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAutomationsRoute = AppAutomationsRouteImport.update({
+  id: '/automations',
+  path: '/automations',
   getParentRoute: () => AppRoute,
 } as any)
 const AppCampaignsIndexRoute = AppCampaignsIndexRouteImport.update({
@@ -172,118 +157,70 @@ const AppCampaignsIndexRoute = AppCampaignsIndexRouteImport.update({
   path: '/campaigns/',
   getParentRoute: () => AppRoute,
 } as any)
-const AppCampaignsIdRoute = AppCampaignsIdRouteImport.update({
-  id: '/campaigns/$id',
-  path: '/campaigns/$id',
+const AppAgentsIndexRoute = AppAgentsIndexRouteImport.update({
+  id: '/agents/',
+  path: '/agents/',
   getParentRoute: () => AppRoute,
-} as any)
-const AppCampaignsNewRoute = AppCampaignsNewRouteImport.update({
-  id: '/campaigns/new',
-  path: '/campaigns/new',
-  getParentRoute: () => AppRoute,
-} as any)
-const ApiAgentsIdRoute = ApiAgentsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ApiAgentsRoute,
-} as any)
-const ApiAutomationsIdRoute = ApiAutomationsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ApiAutomationsRoute,
-} as any)
-const ApiCallsIdRoute = ApiCallsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ApiCallsRoute,
-} as any)
-const ApiCampaignsIdRoute = ApiCampaignsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ApiCampaignsRoute,
-} as any)
-const ApiContactsIdRoute = ApiContactsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ApiContactsRoute,
 } as any)
 const ApiPublicTwilioStatusRoute = ApiPublicTwilioStatusRouteImport.update({
   id: '/api/public/twilio-status',
   path: '/api/public/twilio-status',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiCallsIdRecordingRoute = ApiCallsIdRecordingRouteImport.update({
-  id: '/recording',
-  path: '/recording',
-  getParentRoute: () => ApiCallsIdRoute,
+const ApiContactsIdRoute = ApiContactsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiContactsRoute,
 } as any)
-const ApiCampaignsIdPauseRoute = ApiCampaignsIdPauseRouteImport.update({
-  id: '/pause',
-  path: '/pause',
-  getParentRoute: () => ApiCampaignsIdRoute,
+const ApiCampaignsIdRoute = ApiCampaignsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiCampaignsRoute,
 } as any)
-const ApiCampaignsIdStartRoute = ApiCampaignsIdStartRouteImport.update({
-  id: '/start',
-  path: '/start',
-  getParentRoute: () => ApiCampaignsIdRoute,
+const ApiCallsIdRoute = ApiCallsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiCallsRoute,
 } as any)
-const ApiPublicBridgeAgentRoute = ApiPublicBridgeAgentRouteImport.update({
-  id: '/api/public/bridge/agent',
-  path: '/api/public/bridge/agent',
-  getParentRoute: () => rootRouteImport,
+const ApiAutomationsIdRoute = ApiAutomationsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiAutomationsRoute,
 } as any)
-const ApiPublicBridgeCallEventRoute =
-  ApiPublicBridgeCallEventRouteImport.update({
-    id: '/api/public/bridge/call-event',
-    path: '/api/public/bridge/call-event',
+const ApiAgentsIdRoute = ApiAgentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiAgentsRoute,
+} as any)
+const AppCampaignsNewRoute = AppCampaignsNewRouteImport.update({
+  id: '/campaigns/new',
+  path: '/campaigns/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCampaignsIdRoute = AppCampaignsIdRouteImport.update({
+  id: '/campaigns/$id',
+  path: '/campaigns/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCallsIdRoute = AppCallsIdRouteImport.update({
+  id: '/calls/$id',
+  path: '/calls/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAgentsIdRoute = AppAgentsIdRouteImport.update({
+  id: '/agents/$id',
+  path: '/agents/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const ApiPublicWebhooksTwilioRecordingRoute =
+  ApiPublicWebhooksTwilioRecordingRouteImport.update({
+    id: '/api/public/webhooks/twilio-recording',
+    path: '/api/public/webhooks/twilio-recording',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicBridgeTransferRoute = ApiPublicBridgeTransferRouteImport.update({
-  id: '/api/public/bridge/transfer',
-  path: '/api/public/bridge/transfer',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicBridgeTtsRoute = ApiPublicBridgeTtsRouteImport.update({
-  id: '/api/public/bridge/tts',
-  path: '/api/public/bridge/tts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicBridgeTurnRoute = ApiPublicBridgeTurnRouteImport.update({
-  id: '/api/public/bridge/turn',
-  path: '/api/public/bridge/turn',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicHooksCampaignTickRoute =
-  ApiPublicHooksCampaignTickRouteImport.update({
-    id: '/api/public/hooks/campaign-tick',
-    path: '/api/public/hooks/campaign-tick',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicHooksRetryReflectionsRoute =
-  ApiPublicHooksRetryReflectionsRouteImport.update({
-    id: '/api/public/hooks/retry-reflections',
-    path: '/api/public/hooks/retry-reflections',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicHooksSweepStuckCallsRoute =
-  ApiPublicHooksSweepStuckCallsRouteImport.update({
-    id: '/api/public/hooks/sweep-stuck-calls',
-    path: '/api/public/hooks/sweep-stuck-calls',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicTwilioAmdRoute = ApiPublicTwilioAmdRouteImport.update({
-  id: '/api/public/twilio/amd',
-  path: '/api/public/twilio/amd',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicTwilioTransferRoute = ApiPublicTwilioTransferRouteImport.update({
-  id: '/api/public/twilio/transfer',
-  path: '/api/public/twilio/transfer',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicTwilioVoiceRoute = ApiPublicTwilioVoiceRouteImport.update({
-  id: '/api/public/twilio/voice',
-  path: '/api/public/twilio/voice',
+const ApiPublicWebhooksTwilioRoute = ApiPublicWebhooksTwilioRouteImport.update({
+  id: '/api/public/webhooks/twilio',
+  path: '/api/public/webhooks/twilio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicWebhooksAutomationsRoute =
@@ -292,17 +229,80 @@ const ApiPublicWebhooksAutomationsRoute =
     path: '/api/public/webhooks/automations',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicWebhooksTwilioRoute = ApiPublicWebhooksTwilioRouteImport.update({
-  id: '/api/public/webhooks/twilio',
-  path: '/api/public/webhooks/twilio',
+const ApiPublicTwilioVoiceRoute = ApiPublicTwilioVoiceRouteImport.update({
+  id: '/api/public/twilio/voice',
+  path: '/api/public/twilio/voice',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicWebhooksTwilioRecordingRoute =
-  ApiPublicWebhooksTwilioRecordingRouteImport.update({
-    id: '/api/public/webhooks/twilio-recording',
-    path: '/api/public/webhooks/twilio-recording',
+const ApiPublicTwilioTransferRoute = ApiPublicTwilioTransferRouteImport.update({
+  id: '/api/public/twilio/transfer',
+  path: '/api/public/twilio/transfer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicTwilioAmdRoute = ApiPublicTwilioAmdRouteImport.update({
+  id: '/api/public/twilio/amd',
+  path: '/api/public/twilio/amd',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHooksSweepStuckCallsRoute =
+  ApiPublicHooksSweepStuckCallsRouteImport.update({
+    id: '/api/public/hooks/sweep-stuck-calls',
+    path: '/api/public/hooks/sweep-stuck-calls',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksRetryReflectionsRoute =
+  ApiPublicHooksRetryReflectionsRouteImport.update({
+    id: '/api/public/hooks/retry-reflections',
+    path: '/api/public/hooks/retry-reflections',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksCampaignTickRoute =
+  ApiPublicHooksCampaignTickRouteImport.update({
+    id: '/api/public/hooks/campaign-tick',
+    path: '/api/public/hooks/campaign-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicBridgeTurnRoute = ApiPublicBridgeTurnRouteImport.update({
+  id: '/api/public/bridge/turn',
+  path: '/api/public/bridge/turn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicBridgeTtsRoute = ApiPublicBridgeTtsRouteImport.update({
+  id: '/api/public/bridge/tts',
+  path: '/api/public/bridge/tts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicBridgeTransferRoute = ApiPublicBridgeTransferRouteImport.update({
+  id: '/api/public/bridge/transfer',
+  path: '/api/public/bridge/transfer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicBridgeCallEventRoute =
+  ApiPublicBridgeCallEventRouteImport.update({
+    id: '/api/public/bridge/call-event',
+    path: '/api/public/bridge/call-event',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicBridgeAgentRoute = ApiPublicBridgeAgentRouteImport.update({
+  id: '/api/public/bridge/agent',
+  path: '/api/public/bridge/agent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCampaignsIdStartRoute = ApiCampaignsIdStartRouteImport.update({
+  id: '/start',
+  path: '/start',
+  getParentRoute: () => ApiCampaignsIdRoute,
+} as any)
+const ApiCampaignsIdPauseRoute = ApiCampaignsIdPauseRouteImport.update({
+  id: '/pause',
+  path: '/pause',
+  getParentRoute: () => ApiCampaignsIdRoute,
+} as any)
+const ApiCallsIdRecordingRoute = ApiCallsIdRecordingRouteImport.update({
+  id: '/recording',
+  path: '/recording',
+  getParentRoute: () => ApiCallsIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -634,11 +634,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -648,88 +648,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/automations': {
-      id: '/_app/automations'
-      path: '/automations'
-      fullPath: '/automations'
-      preLoaderRoute: typeof AppAutomationsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/call-history': {
-      id: '/_app/call-history'
-      path: '/call-history'
-      fullPath: '/call-history'
-      preLoaderRoute: typeof AppCallHistoryRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/contacts': {
-      id: '/_app/contacts'
-      path: '/contacts'
-      fullPath: '/contacts'
-      preLoaderRoute: typeof AppContactsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/launch': {
-      id: '/_app/launch'
-      path: '/launch'
-      fullPath: '/launch'
-      preLoaderRoute: typeof AppLaunchRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/live-calls': {
-      id: '/_app/live-calls'
-      path: '/live-calls'
-      fullPath: '/live-calls'
-      preLoaderRoute: typeof AppLiveCallsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/settings': {
-      id: '/_app/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AppSettingsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/api/agents': {
-      id: '/api/agents'
-      path: '/api/agents'
-      fullPath: '/api/agents'
-      preLoaderRoute: typeof ApiAgentsRouteImport
+    '/docs/api': {
+      id: '/docs/api'
+      path: '/docs/api'
+      fullPath: '/docs/api'
+      preLoaderRoute: typeof DocsApiRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/automations': {
-      id: '/api/automations'
-      path: '/api/automations'
-      fullPath: '/api/automations'
-      preLoaderRoute: typeof ApiAutomationsRouteImport
-      parentRoute: typeof rootRouteImport
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
     }
-    '/api/calls': {
-      id: '/api/calls'
-      path: '/api/calls'
-      fullPath: '/api/calls'
-      preLoaderRoute: typeof ApiCallsRouteImport
-      parentRoute: typeof rootRouteImport
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthRoute
     }
-    '/api/campaigns': {
-      id: '/api/campaigns'
-      path: '/api/campaigns'
-      fullPath: '/api/campaigns'
-      preLoaderRoute: typeof ApiCampaignsRouteImport
+    '/api/openapi.json': {
+      id: '/api/openapi.json'
+      path: '/api/openapi.json'
+      fullPath: '/api/openapi.json'
+      preLoaderRoute: typeof ApiOpenapiDotjsonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/contacts': {
@@ -739,53 +690,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiContactsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/openapi.json': {
-      id: '/api/openapi.json'
-      path: '/api/openapi.json'
-      fullPath: '/api/openapi.json'
-      preLoaderRoute: typeof ApiOpenapiDotjsonRouteImport
+    '/api/campaigns': {
+      id: '/api/campaigns'
+      path: '/api/campaigns'
+      fullPath: '/api/campaigns'
+      preLoaderRoute: typeof ApiCampaignsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/forgot-password': {
-      id: '/auth/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/auth/forgot-password'
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/docs/api': {
-      id: '/docs/api'
-      path: '/docs/api'
-      fullPath: '/docs/api'
-      preLoaderRoute: typeof DocsApiRouteImport
+    '/api/calls': {
+      id: '/api/calls'
+      path: '/api/calls'
+      fullPath: '/api/calls'
+      preLoaderRoute: typeof ApiCallsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/agents/': {
-      id: '/_app/agents/'
-      path: '/agents'
-      fullPath: '/agents/'
-      preLoaderRoute: typeof AppAgentsIndexRouteImport
+    '/api/automations': {
+      id: '/api/automations'
+      path: '/api/automations'
+      fullPath: '/api/automations'
+      preLoaderRoute: typeof ApiAutomationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/agents': {
+      id: '/api/agents'
+      path: '/api/agents'
+      fullPath: '/api/agents'
+      preLoaderRoute: typeof ApiAgentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/agents/$id': {
-      id: '/_app/agents/$id'
-      path: '/agents/$id'
-      fullPath: '/agents/$id'
-      preLoaderRoute: typeof AppAgentsIdRouteImport
+    '/_app/live-calls': {
+      id: '/_app/live-calls'
+      path: '/live-calls'
+      fullPath: '/live-calls'
+      preLoaderRoute: typeof AppLiveCallsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/calls/$id': {
-      id: '/_app/calls/$id'
-      path: '/calls/$id'
-      fullPath: '/calls/$id'
-      preLoaderRoute: typeof AppCallsIdRouteImport
+    '/_app/launch': {
+      id: '/_app/launch'
+      path: '/launch'
+      fullPath: '/launch'
+      preLoaderRoute: typeof AppLaunchRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/contacts': {
+      id: '/_app/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof AppContactsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/call-history': {
+      id: '/_app/call-history'
+      path: '/call-history'
+      fullPath: '/call-history'
+      preLoaderRoute: typeof AppCallHistoryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/automations': {
+      id: '/_app/automations'
+      path: '/automations'
+      fullPath: '/automations'
+      preLoaderRoute: typeof AppAutomationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/campaigns/': {
@@ -795,54 +774,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCampaignsIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/campaigns/$id': {
-      id: '/_app/campaigns/$id'
-      path: '/campaigns/$id'
-      fullPath: '/campaigns/$id'
-      preLoaderRoute: typeof AppCampaignsIdRouteImport
+    '/_app/agents/': {
+      id: '/_app/agents/'
+      path: '/agents'
+      fullPath: '/agents/'
+      preLoaderRoute: typeof AppAgentsIndexRouteImport
       parentRoute: typeof AppRoute
-    }
-    '/_app/campaigns/new': {
-      id: '/_app/campaigns/new'
-      path: '/campaigns/new'
-      fullPath: '/campaigns/new'
-      preLoaderRoute: typeof AppCampaignsNewRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/api/agents/$id': {
-      id: '/api/agents/$id'
-      path: '/$id'
-      fullPath: '/api/agents/$id'
-      preLoaderRoute: typeof ApiAgentsIdRouteImport
-      parentRoute: typeof ApiAgentsRoute
-    }
-    '/api/automations/$id': {
-      id: '/api/automations/$id'
-      path: '/$id'
-      fullPath: '/api/automations/$id'
-      preLoaderRoute: typeof ApiAutomationsIdRouteImport
-      parentRoute: typeof ApiAutomationsRoute
-    }
-    '/api/calls/$id': {
-      id: '/api/calls/$id'
-      path: '/$id'
-      fullPath: '/api/calls/$id'
-      preLoaderRoute: typeof ApiCallsIdRouteImport
-      parentRoute: typeof ApiCallsRoute
-    }
-    '/api/campaigns/$id': {
-      id: '/api/campaigns/$id'
-      path: '/$id'
-      fullPath: '/api/campaigns/$id'
-      preLoaderRoute: typeof ApiCampaignsIdRouteImport
-      parentRoute: typeof ApiCampaignsRoute
-    }
-    '/api/contacts/$id': {
-      id: '/api/contacts/$id'
-      path: '/$id'
-      fullPath: '/api/contacts/$id'
-      preLoaderRoute: typeof ApiContactsIdRouteImport
-      parentRoute: typeof ApiContactsRoute
     }
     '/api/public/twilio-status': {
       id: '/api/public/twilio-status'
@@ -851,109 +788,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicTwilioStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/calls/$id/recording': {
-      id: '/api/calls/$id/recording'
-      path: '/recording'
-      fullPath: '/api/calls/$id/recording'
-      preLoaderRoute: typeof ApiCallsIdRecordingRouteImport
-      parentRoute: typeof ApiCallsIdRoute
+    '/api/contacts/$id': {
+      id: '/api/contacts/$id'
+      path: '/$id'
+      fullPath: '/api/contacts/$id'
+      preLoaderRoute: typeof ApiContactsIdRouteImport
+      parentRoute: typeof ApiContactsRoute
     }
-    '/api/campaigns/$id/pause': {
-      id: '/api/campaigns/$id/pause'
-      path: '/pause'
-      fullPath: '/api/campaigns/$id/pause'
-      preLoaderRoute: typeof ApiCampaignsIdPauseRouteImport
-      parentRoute: typeof ApiCampaignsIdRoute
+    '/api/campaigns/$id': {
+      id: '/api/campaigns/$id'
+      path: '/$id'
+      fullPath: '/api/campaigns/$id'
+      preLoaderRoute: typeof ApiCampaignsIdRouteImport
+      parentRoute: typeof ApiCampaignsRoute
     }
-    '/api/campaigns/$id/start': {
-      id: '/api/campaigns/$id/start'
-      path: '/start'
-      fullPath: '/api/campaigns/$id/start'
-      preLoaderRoute: typeof ApiCampaignsIdStartRouteImport
-      parentRoute: typeof ApiCampaignsIdRoute
+    '/api/calls/$id': {
+      id: '/api/calls/$id'
+      path: '/$id'
+      fullPath: '/api/calls/$id'
+      preLoaderRoute: typeof ApiCallsIdRouteImport
+      parentRoute: typeof ApiCallsRoute
     }
-    '/api/public/bridge/agent': {
-      id: '/api/public/bridge/agent'
-      path: '/api/public/bridge/agent'
-      fullPath: '/api/public/bridge/agent'
-      preLoaderRoute: typeof ApiPublicBridgeAgentRouteImport
-      parentRoute: typeof rootRouteImport
+    '/api/automations/$id': {
+      id: '/api/automations/$id'
+      path: '/$id'
+      fullPath: '/api/automations/$id'
+      preLoaderRoute: typeof ApiAutomationsIdRouteImport
+      parentRoute: typeof ApiAutomationsRoute
     }
-    '/api/public/bridge/call-event': {
-      id: '/api/public/bridge/call-event'
-      path: '/api/public/bridge/call-event'
-      fullPath: '/api/public/bridge/call-event'
-      preLoaderRoute: typeof ApiPublicBridgeCallEventRouteImport
-      parentRoute: typeof rootRouteImport
+    '/api/agents/$id': {
+      id: '/api/agents/$id'
+      path: '/$id'
+      fullPath: '/api/agents/$id'
+      preLoaderRoute: typeof ApiAgentsIdRouteImport
+      parentRoute: typeof ApiAgentsRoute
     }
-    '/api/public/bridge/transfer': {
-      id: '/api/public/bridge/transfer'
-      path: '/api/public/bridge/transfer'
-      fullPath: '/api/public/bridge/transfer'
-      preLoaderRoute: typeof ApiPublicBridgeTransferRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_app/campaigns/new': {
+      id: '/_app/campaigns/new'
+      path: '/campaigns/new'
+      fullPath: '/campaigns/new'
+      preLoaderRoute: typeof AppCampaignsNewRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/api/public/bridge/tts': {
-      id: '/api/public/bridge/tts'
-      path: '/api/public/bridge/tts'
-      fullPath: '/api/public/bridge/tts'
-      preLoaderRoute: typeof ApiPublicBridgeTtsRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_app/campaigns/$id': {
+      id: '/_app/campaigns/$id'
+      path: '/campaigns/$id'
+      fullPath: '/campaigns/$id'
+      preLoaderRoute: typeof AppCampaignsIdRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/api/public/bridge/turn': {
-      id: '/api/public/bridge/turn'
-      path: '/api/public/bridge/turn'
-      fullPath: '/api/public/bridge/turn'
-      preLoaderRoute: typeof ApiPublicBridgeTurnRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_app/calls/$id': {
+      id: '/_app/calls/$id'
+      path: '/calls/$id'
+      fullPath: '/calls/$id'
+      preLoaderRoute: typeof AppCallsIdRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/api/public/hooks/campaign-tick': {
-      id: '/api/public/hooks/campaign-tick'
-      path: '/api/public/hooks/campaign-tick'
-      fullPath: '/api/public/hooks/campaign-tick'
-      preLoaderRoute: typeof ApiPublicHooksCampaignTickRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_app/agents/$id': {
+      id: '/_app/agents/$id'
+      path: '/agents/$id'
+      fullPath: '/agents/$id'
+      preLoaderRoute: typeof AppAgentsIdRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/api/public/hooks/retry-reflections': {
-      id: '/api/public/hooks/retry-reflections'
-      path: '/api/public/hooks/retry-reflections'
-      fullPath: '/api/public/hooks/retry-reflections'
-      preLoaderRoute: typeof ApiPublicHooksRetryReflectionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/hooks/sweep-stuck-calls': {
-      id: '/api/public/hooks/sweep-stuck-calls'
-      path: '/api/public/hooks/sweep-stuck-calls'
-      fullPath: '/api/public/hooks/sweep-stuck-calls'
-      preLoaderRoute: typeof ApiPublicHooksSweepStuckCallsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/twilio/amd': {
-      id: '/api/public/twilio/amd'
-      path: '/api/public/twilio/amd'
-      fullPath: '/api/public/twilio/amd'
-      preLoaderRoute: typeof ApiPublicTwilioAmdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/twilio/transfer': {
-      id: '/api/public/twilio/transfer'
-      path: '/api/public/twilio/transfer'
-      fullPath: '/api/public/twilio/transfer'
-      preLoaderRoute: typeof ApiPublicTwilioTransferRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/twilio/voice': {
-      id: '/api/public/twilio/voice'
-      path: '/api/public/twilio/voice'
-      fullPath: '/api/public/twilio/voice'
-      preLoaderRoute: typeof ApiPublicTwilioVoiceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/webhooks/automations': {
-      id: '/api/public/webhooks/automations'
-      path: '/api/public/webhooks/automations'
-      fullPath: '/api/public/webhooks/automations'
-      preLoaderRoute: typeof ApiPublicWebhooksAutomationsRouteImport
+    '/api/public/webhooks/twilio-recording': {
+      id: '/api/public/webhooks/twilio-recording'
+      path: '/api/public/webhooks/twilio-recording'
+      fullPath: '/api/public/webhooks/twilio-recording'
+      preLoaderRoute: typeof ApiPublicWebhooksTwilioRecordingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/webhooks/twilio': {
@@ -963,12 +865,110 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWebhooksTwilioRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/webhooks/twilio-recording': {
-      id: '/api/public/webhooks/twilio-recording'
-      path: '/api/public/webhooks/twilio-recording'
-      fullPath: '/api/public/webhooks/twilio-recording'
-      preLoaderRoute: typeof ApiPublicWebhooksTwilioRecordingRouteImport
+    '/api/public/webhooks/automations': {
+      id: '/api/public/webhooks/automations'
+      path: '/api/public/webhooks/automations'
+      fullPath: '/api/public/webhooks/automations'
+      preLoaderRoute: typeof ApiPublicWebhooksAutomationsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/public/twilio/voice': {
+      id: '/api/public/twilio/voice'
+      path: '/api/public/twilio/voice'
+      fullPath: '/api/public/twilio/voice'
+      preLoaderRoute: typeof ApiPublicTwilioVoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/twilio/transfer': {
+      id: '/api/public/twilio/transfer'
+      path: '/api/public/twilio/transfer'
+      fullPath: '/api/public/twilio/transfer'
+      preLoaderRoute: typeof ApiPublicTwilioTransferRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/twilio/amd': {
+      id: '/api/public/twilio/amd'
+      path: '/api/public/twilio/amd'
+      fullPath: '/api/public/twilio/amd'
+      preLoaderRoute: typeof ApiPublicTwilioAmdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/sweep-stuck-calls': {
+      id: '/api/public/hooks/sweep-stuck-calls'
+      path: '/api/public/hooks/sweep-stuck-calls'
+      fullPath: '/api/public/hooks/sweep-stuck-calls'
+      preLoaderRoute: typeof ApiPublicHooksSweepStuckCallsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/retry-reflections': {
+      id: '/api/public/hooks/retry-reflections'
+      path: '/api/public/hooks/retry-reflections'
+      fullPath: '/api/public/hooks/retry-reflections'
+      preLoaderRoute: typeof ApiPublicHooksRetryReflectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/campaign-tick': {
+      id: '/api/public/hooks/campaign-tick'
+      path: '/api/public/hooks/campaign-tick'
+      fullPath: '/api/public/hooks/campaign-tick'
+      preLoaderRoute: typeof ApiPublicHooksCampaignTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/bridge/turn': {
+      id: '/api/public/bridge/turn'
+      path: '/api/public/bridge/turn'
+      fullPath: '/api/public/bridge/turn'
+      preLoaderRoute: typeof ApiPublicBridgeTurnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/bridge/tts': {
+      id: '/api/public/bridge/tts'
+      path: '/api/public/bridge/tts'
+      fullPath: '/api/public/bridge/tts'
+      preLoaderRoute: typeof ApiPublicBridgeTtsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/bridge/transfer': {
+      id: '/api/public/bridge/transfer'
+      path: '/api/public/bridge/transfer'
+      fullPath: '/api/public/bridge/transfer'
+      preLoaderRoute: typeof ApiPublicBridgeTransferRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/bridge/call-event': {
+      id: '/api/public/bridge/call-event'
+      path: '/api/public/bridge/call-event'
+      fullPath: '/api/public/bridge/call-event'
+      preLoaderRoute: typeof ApiPublicBridgeCallEventRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/bridge/agent': {
+      id: '/api/public/bridge/agent'
+      path: '/api/public/bridge/agent'
+      fullPath: '/api/public/bridge/agent'
+      preLoaderRoute: typeof ApiPublicBridgeAgentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/campaigns/$id/start': {
+      id: '/api/campaigns/$id/start'
+      path: '/start'
+      fullPath: '/api/campaigns/$id/start'
+      preLoaderRoute: typeof ApiCampaignsIdStartRouteImport
+      parentRoute: typeof ApiCampaignsIdRoute
+    }
+    '/api/campaigns/$id/pause': {
+      id: '/api/campaigns/$id/pause'
+      path: '/pause'
+      fullPath: '/api/campaigns/$id/pause'
+      preLoaderRoute: typeof ApiCampaignsIdPauseRouteImport
+      parentRoute: typeof ApiCampaignsIdRoute
+    }
+    '/api/calls/$id/recording': {
+      id: '/api/calls/$id/recording'
+      path: '/recording'
+      fullPath: '/api/calls/$id/recording'
+      preLoaderRoute: typeof ApiCallsIdRecordingRouteImport
+      parentRoute: typeof ApiCallsIdRoute
     }
   }
 }
