@@ -26,6 +26,7 @@ import { syncTwilioNumbers } from "@/lib/telephony/sync-numbers.functions";
 import { testElevenLabs } from "@/lib/integrations/elevenlabs-test.functions";
 import { Volume2 } from "lucide-react";
 import { CredentialsTab } from "@/components/app/credentials-tab";
+import { BuyNumberDialog } from "@/components/app/buy-number-dialog";
 
 
 export const Route = createFileRoute("/_app/settings")({
@@ -143,7 +144,10 @@ function SettingsPage() {
               <p className="text-xs text-neutral-500">
                 Numbers provisioned via Twilio for outbound caller ID and inbound webhooks.
               </p>
-              <SyncTwilioButton orgId={orgId} />
+              <div className="flex gap-2">
+                <SyncTwilioButton orgId={orgId} />
+                <BuyNumberDialog onPurchased={reloadPhones} />
+              </div>
             </div>
             <div className="space-y-2 mb-4">
               {phones.map((p) => (
@@ -289,6 +293,24 @@ function SettingsPage() {
   );
 }
 
+async function reloadPhones() {
+  const { data } = await supabase
+    .from("phone_numbers")
+    .select("*")
+    .order("created_at", { ascending: false });
+  const rows = (data ?? []).map((r): PhoneNumber => ({
+    id: r.id as UUID,
+    org_id: r.user_id as UUID,
+    number: r.number,
+    twilio_sid: r.twilio_sid,
+    type: (r.type as PhoneNumber["type"]) ?? "local",
+    capabilities: (Array.isArray(r.capabilities) ? (r.capabilities as string[]) : ["voice"]).filter((c): c is "voice" | "sms" => c === "voice" || c === "sms"),
+    inbound_agent_id: (r.inbound_agent_id as UUID | null) ?? null,
+    created_at: r.created_at,
+  }));
+  useDB.setState({ phones: rows });
+}
+
 function SyncTwilioButton({ orgId }: { orgId: UUID }) {
   const [busy, setBusy] = useState(false);
   const onClick = async () => {
@@ -299,22 +321,7 @@ function SyncTwilioButton({ orgId }: { orgId: UUID }) {
         toast.error(`Sync failed: ${res.message}`);
         return;
       }
-      // Reload phones for the current user from DB into the store
-      const { data } = await supabase
-        .from("phone_numbers")
-        .select("*")
-        .order("created_at", { ascending: false });
-      const rows = (data ?? []).map((r): PhoneNumber => ({
-        id: r.id as UUID,
-        org_id: r.user_id as UUID,
-        number: r.number,
-        twilio_sid: r.twilio_sid,
-        type: (r.type as PhoneNumber["type"]) ?? "local",
-        capabilities: (Array.isArray(r.capabilities) ? (r.capabilities as string[]) : ["voice"]).filter((c): c is "voice" | "sms" => c === "voice" || c === "sms"),
-        inbound_agent_id: (r.inbound_agent_id as UUID | null) ?? null,
-        created_at: r.created_at,
-      }));
-      useDB.setState({ phones: rows });
+      await reloadPhones();
       const msg = res.total === 0
         ? "No numbers found on your Twilio account."
         : `${res.added} added · ${res.updated} updated · ${res.total} total`;
