@@ -233,7 +233,7 @@ const server = Bun.serve({
                 let aborted = false;
                 const prevCancel = session.cancelSpeech;
                 session.cancelSpeech = () => { aborted = true; prevCancel(); };
-                await new Promise((r) => setTimeout(r, 1500));
+                await new Promise((r) => setTimeout(r, 700));
                 session.cancelSpeech = prevCancel;
                 if (aborted || session.closed || session.pendingUser.trim().length > 0) {
                     // Human already started talking — let the STT final drive the first turn.
