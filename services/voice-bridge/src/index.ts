@@ -273,7 +273,7 @@ const server = Bun.serve<Ctx>({
         // greets. Twilio's `start` fires the instant the media stream opens,
         // which on outbound calls is essentially at pickup — greeting there
         // means the agent talks over the human's hello (and over the first
-        // second of a voicemail intro). Delay 1500ms so the human leads;
+        // second of a voicemail intro). Delay 700ms so the human leads;
         // any interim STT during the wait cancels the greeting so the agent
         // can respond to what they said instead of barrelling in.
         const speakFirst = session.agent.speak_first ?? true;
@@ -282,7 +282,7 @@ const server = Bun.serve<Ctx>({
         let aborted = false;
         const prevCancel = session.cancelSpeech;
         session.cancelSpeech = () => { aborted = true; prevCancel(); };
-        await new Promise((r) => setTimeout(r, 1500));
+        await new Promise((r) => setTimeout(r, 700));
         session.cancelSpeech = prevCancel;
         if (aborted || session.closed || session.pendingUser.trim().length > 0) {
           // Human already started talking — let the STT final drive the first turn.

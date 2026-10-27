@@ -493,20 +493,23 @@ function buildSystem(a: AgentSummary, state: ConvState, collected: CollectedFiel
   const canTransfer = !!a.transfer_number?.trim();
   const fields = a.data_fields ?? [];
   const hasRequired = fields.some((f) => f.required !== false);
+  const userPrompt = a.system_prompt?.trim();
   const parts = [
-    "You are operating under a strict conversation state machine. Obey the current PHASE below.",
+    userPrompt
+      ? `YOUR INSTRUCTIONS FROM THE BUSINESS (highest priority - these override every other rule below if they conflict, including tone, wording, order of questions and what to say):\n${userPrompt}`
+      : "",
+    "You are operating under a conversation state machine. Follow the current PHASE below, but never in a way that contradicts the business instructions above.",
     stateGuidance(state, a, collected),
     hasRequired
       ? "Conversation flow priority: FIRST follow the configured system prompt to qualify and engage the caller (screening / discovery / qualification questions). ONLY AFTER the caller is clearly qualified or has agreed to next steps do you begin collecting the required data fields listed below, one at a time. NEVER open the call by asking for name, phone, email, or any personal contact detail. Once ALL required fields are collected, immediately move to PHASE = CONFIRMING (confirm + next step + farewell + [END_CALL])."
       : "Conversation flow priority: follow the configured system prompt's conversation order. Do not treat data fields as an opening script. In the opening and early discovery phase, acknowledge the caller and ask the next relevant discovery question from the system prompt. Never jump straight to collecting name, phone, email, or contact details unless the caller explicitly asks to book/schedule, agrees to a demo/appointment/follow-up, or volunteers contact details first.",
-    a.system_prompt?.trim(),
     a.name ? `Your name is ${a.name}. This is YOUR name (the assistant's), NOT the caller's. NEVER address the caller as "${a.name}" or use "${a.name}" as if it were their name. The caller has NOT told you their name. Do NOT guess, assume, or invent a name for the caller. Address them neutrally ("you", "there") until they explicitly say their name in this conversation. If unsure, do not use any name at all.` : "You do not know the caller's name. Never invent or assume one. Address them neutrally until they say their name.",
     a.personality ? `Personality: ${a.personality}` : "",
     a.objective ? `Objective: ${a.objective}` : "",
     a.prompt ? `Task: ${a.prompt}` : "",
     a.business_knowledge ? `Reference:\n${a.business_knowledge}` : "",
     a.playbook?.trim()
-      ? `LEARNED PLAYBOOK (auto-updated from past calls - obey these rules; they override generic tendencies):\n${a.playbook.trim()}`
+      ? `LEARNED PLAYBOOK (auto-updated from past calls - lower priority than the business instructions; ignore any item that conflicts with them):\n${a.playbook.trim()}`
       : "",
     fields.length
       ? `Information to collect during this call. Ask one item at a time and confirm each. NEVER re-ask a field that is already listed under ALREADY COLLECTED - treat those as final:\n- ${fields.map(describeField).join("\n- ")}\n\nDo NOT ask for any other personal detail (e.g. address, DOB) unless it is in the list above.`
@@ -595,9 +598,10 @@ export const Route = createFileRoute("/api/public/bridge/turn")({
               if (callRow.agent_id && !body.agent.playbook) {
                 const { data: agentRow } = await supabaseAdmin
                   .from("agents")
-                  .select("playbook, personality, objective, business_knowledge, qualification_questions, end_call_conditions, data_fields, transfer_number")
+                  .select("user_id, playbook, personality, objective, business_knowledge, qualification_questions, end_call_conditions, data_fields, transfer_number")
                   .eq("id", callRow.agent_id)
                   .maybeSingle<{
+                    user_id: string;
                     playbook: string | null;
                     personality: string | null;
                     objective: string | null;
@@ -608,7 +612,13 @@ export const Route = createFileRoute("/api/public/bridge/turn")({
                     transfer_number: string | null;
                   }>();
                 if (agentRow) {
-                  body.agent.playbook = agentRow.playbook || undefined;
+                  // Only use the learned playbook when AI learning is switched on.
+                  const { data: settings } = await supabaseAdmin
+                    .from("org_settings")
+                    .select("learning_enabled")
+                    .eq("user_id", agentRow.user_id)
+                    .maybeSingle<{ learning_enabled: boolean | null }>();
+                  body.agent.playbook = settings?.learning_enabled ? agentRow.playbook || undefined : undefined;
                   body.agent.personality = body.agent.personality || agentRow.personality || undefined;
                   body.agent.objective = body.agent.objective || agentRow.objective || undefined;
                   body.agent.business_knowledge = body.agent.business_knowledge || agentRow.business_knowledge || undefined;
