@@ -7,7 +7,7 @@
  */
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { cred } from "@/lib/config/credentials";
-import { prewarmBridge } from "./prewarm.server";
+import { prewarmBridge } from "./prewarm";
 
 interface DialArgs {
   userId: string;

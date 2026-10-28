@@ -22,7 +22,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { cred } from "@/lib/config/credentials";
-import { prewarmBridge } from "./prewarm.server";
+import { prewarmBridge } from "./prewarm";
 
 const InputSchema = z.object({
   to: z.string().regex(/^\+\d{8,15}$/, "E.164 phone number required"),
