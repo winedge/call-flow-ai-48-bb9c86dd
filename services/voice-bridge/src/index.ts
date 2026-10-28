@@ -484,13 +484,12 @@ async function speak(
   };
   session.speaking = true;
   try {
-    const { audio_url } = await (prefetched?.catch(() => null).then((r) => r ?? Promise.reject()) ?? Promise.reject()).catch(() => synthTts(
-      text,
-      session.agent.voice_id,
-      session.agent.language,
-      session.agent.tts_engine,
-      session.agent!.voice_settings,
-    ));
+    const agent = session.agent;
+    const fresh = () =>
+      synthTts(text, agent.voice_id, agent.language, agent.tts_engine, agent.voice_settings);
+    const { audio_url } = prefetched
+      ? await prefetched.catch(fresh)
+      : await fresh();
 
     if (cancelled || session.closed) return;
     const buf = await fetch(audio_url).then((r) => r.arrayBuffer());
