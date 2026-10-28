@@ -22,6 +22,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { cred } from "@/lib/config/credentials";
+import { prewarmBridge } from "./prewarm.server";
 
 const InputSchema = z.object({
   to: z.string().regex(/^\+\d{8,15}$/, "E.164 phone number required"),
@@ -56,6 +57,7 @@ export const initiateCall = createServerFn({ method: "POST" })
 
     const voiceUrl = new URL(`${publicUrl}/api/public/twilio/voice`);
     voiceUrl.searchParams.set("agent_id", data.agentId);
+    await prewarmBridge(bridgeUrl!, data.agentId);
     const { data: agentBootstrap } = await context.supabase
       .from("agents")
       .select("name,greeting,voice_id,language,tts_engine,speak_first,voice_stability,voice_similarity_boost,voice_style,voice_speaker_boost")

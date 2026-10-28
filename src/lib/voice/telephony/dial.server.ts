@@ -7,6 +7,7 @@
  */
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { cred } from "@/lib/config/credentials";
+import { prewarmBridge } from "./prewarm.server";
 
 interface DialArgs {
   userId: string;
@@ -41,6 +42,7 @@ export async function dialOutbound(args: DialArgs): Promise<DialResult> {
 
   const voiceUrl = new URL(`${publicUrl}/api/public/twilio/voice`);
   voiceUrl.searchParams.set("agent_id", args.agentId);
+  await prewarmBridge(bridgeUrl!, args.agentId);
 
   const { data: agentBootstrap } = await supabaseAdmin
     .from("agents")
