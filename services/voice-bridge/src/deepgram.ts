@@ -33,8 +33,8 @@ export function openDeepgram(apiKey: string, cb: DeepgramCallbacks): {
   url.searchParams.set("interim_results", "true");
   // Longer endpointing + explicit utterance end: gives the caller room to
   // finish a thought instead of the agent jumping in after every pause.
-  url.searchParams.set("endpointing", "500");
-  url.searchParams.set("utterance_end_ms", "1200");
+  url.searchParams.set("endpointing", "300");
+  url.searchParams.set("utterance_end_ms", "1000");
   url.searchParams.set("vad_events", "true");
   // Drop background speech/noise picked up on the far side.
   url.searchParams.set("filler_words", "false");
