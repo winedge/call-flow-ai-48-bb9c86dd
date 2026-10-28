@@ -107,6 +107,8 @@ type Session = {
   dgReconnects: number;
   history: { role: "user" | "assistant"; content: string }[];
   speaking: boolean;
+  /** Greeting audio synthesized during ringing so it plays instantly on pickup. */
+  greetingAudio?: Promise<{ audio_url: string }>;
   pendingUser: string;
   turnLock: boolean;
   queuedUser: string;
@@ -223,6 +225,12 @@ const server = Bun.serve<Ctx>({
         fetchAgent(agentId)
           .then((a) => {
             session.agent = a;
+            // Pre-make the greeting voice while the phone is still ringing.
+            if ((a.speak_first ?? true)) {
+              const g = a.greeting || "Hello, this is your AI assistant.";
+              session.greetingAudio = synthTts(g, a.voice_id, a.language, a.tts_engine, a.voice_settings);
+              session.greetingAudio.catch(() => {});
+            }
           })
           .catch((e) => {
             log("error", "agent_fetch_failed", {
@@ -282,13 +290,13 @@ const server = Bun.serve<Ctx>({
         let aborted = false;
         const prevCancel = session.cancelSpeech;
         session.cancelSpeech = () => { aborted = true; prevCancel(); };
-        await new Promise((r) => setTimeout(r, 700));
+        await new Promise((r) => setTimeout(r, 400));
         session.cancelSpeech = prevCancel;
         if (aborted || session.closed || session.pendingUser.trim().length > 0) {
           // Human already started talking — let the STT final drive the first turn.
           return;
         }
-        void speak(session, greeting);
+        void speak(session, greeting, session.greetingAudio);
 
       } else if (msg.event === "media" && session.dg && msg.media) {
         const bytes = Uint8Array.from(atob(msg.media.payload), (c) =>
@@ -464,7 +472,11 @@ async function handleUserTurn(session: Session, userText: string) {
   }
 }
 
-async function speak(session: Session, text: string) {
+async function speak(
+  session: Session,
+  text: string,
+  prefetched?: Promise<{ audio_url: string }>,
+) {
   if (!session.agent || !session.streamSid || session.closed) return;
   let cancelled = false;
   session.cancelSpeech = () => {
@@ -472,13 +484,12 @@ async function speak(session: Session, text: string) {
   };
   session.speaking = true;
   try {
-    const { audio_url } = await synthTts(
-      text,
-      session.agent.voice_id,
-      session.agent.language,
-      session.agent.tts_engine,
-      session.agent.voice_settings,
-    );
+    const agent = session.agent;
+    const fresh = () =>
+      synthTts(text, agent.voice_id, agent.language, agent.tts_engine, agent.voice_settings);
+    const { audio_url } = prefetched
+      ? await prefetched.catch(fresh)
+      : await fresh();
 
     if (cancelled || session.closed) return;
     const buf = await fetch(audio_url).then((r) => r.arrayBuffer());
