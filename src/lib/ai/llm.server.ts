@@ -22,6 +22,8 @@ export type ChatRequest = {
   temperature?: number;
   max_tokens?: number;
   json?: boolean;
+  /** Skip model "thinking" for low-latency replies (live calls). */
+  fast?: boolean;
 };
 
 export type ChatResult = {
@@ -76,6 +78,11 @@ export async function chatCompletion(req: ChatRequest): Promise<ChatResult> {
         messages: req.messages,
         ...(req.temperature !== undefined ? { temperature: req.temperature } : {}),
         ...(req.max_tokens !== undefined ? { max_tokens: req.max_tokens } : {}),
+        ...(req.fast
+          ? useOpenRouter
+            ? { reasoning: { enabled: false } }
+            : { reasoning_effort: "none" }
+          : {}),
         ...(req.json ? { response_format: { type: "json_object" } } : {}),
       }),
     });

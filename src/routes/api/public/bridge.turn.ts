@@ -651,6 +651,7 @@ export const Route = createFileRoute("/api/public/bridge/turn")({
           fallbackModel: MODEL,
           temperature: body.agent.temperature ?? 0.4,
           max_tokens: 140,
+          fast: true,
         });
         if (!ai.ok) {
           return errorJson(ai.status, ai.error ?? "AI request failed");
