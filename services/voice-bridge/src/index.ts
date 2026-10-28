@@ -198,6 +198,19 @@ const server = Bun.serve<Ctx>({
       });
     }
 
+    if (url.pathname === "/prewarm" && req.method === "POST") {
+      const secret = process.env.BRIDGE_SHARED_SECRET;
+      if (!secret || req.headers.get("x-bridge-secret") !== secret) {
+        return new Response("unauthorized", { status: 401 });
+      }
+      const agentId = url.searchParams.get("agent_id") ?? "";
+      if (!agentId) return new Response("agent_id required", { status: 400 });
+      getAgent(agentId)
+        .then((a) => ((a.speak_first ?? true) ? getGreetingAudio(a) : null))
+        .catch((e) => log("warn", "prewarm_failed", { agent_id: agentId, error: String(e) }));
+      return new Response("ok", { status: 202 });
+    }
+
     if (url.pathname === "/twilio") {
       if (sessions.size >= MAX_SESSIONS) {
         log("warn", "upgrade_rejected_capacity", {
@@ -252,13 +265,12 @@ const server = Bun.serve<Ctx>({
       });
 
       if (agentId) {
-        fetchAgent(agentId)
+        getAgent(agentId)
           .then((a) => {
             session.agent = a;
-            // Pre-make the greeting voice while the phone is still ringing.
+            // Reuse the cached greeting voice (warmed at dial time).
             if ((a.speak_first ?? true)) {
-              const g = a.greeting || "Hello, this is your AI assistant.";
-              session.greetingAudio = synthTts(g, a.voice_id, a.language, a.tts_engine, a.voice_settings);
+              session.greetingAudio = getGreetingAudio(a);
               session.greetingAudio.catch(() => {});
             }
           })
