@@ -143,7 +143,7 @@ async function synthesizeElevenLabs(
     similarity_boost: overrides?.similarity_boost ?? 0.78,
     style: overrides?.style_strength ?? overrides?.style ?? 0.18,
     use_speaker_boost: overrides?.use_speaker_boost ?? true,
-    speed: 0.92,
+    speed: 1.0,
   };
   const preparedText = prepareSpeechText(text);
 
