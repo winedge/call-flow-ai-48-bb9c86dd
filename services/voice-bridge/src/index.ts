@@ -142,6 +142,36 @@ function isVoicemailSystemText(value: string): boolean {
   );
 }
 
+// ---------- Greeting cache ----------
+// Twilio only opens the media stream AFTER pickup, so making the greeting
+// voice "while ringing" inside the socket handler is too late. Instead we
+// cache the agent + greeting audio per agent (warmed by /prewarm when the
+// app dials, and reused across calls) so pickup → greeting is near-instant.
+const AGENT_TTL_MS = 5 * 60_000;
+const agentCache = new Map<string, { at: number; agent: Promise<AgentConfig> }>();
+const greetingCache = new Map<string, Promise<{ audio_url: string }>>();
+
+function getAgent(agentId: string): Promise<AgentConfig> {
+  const hit = agentCache.get(agentId);
+  if (hit && Date.now() - hit.at < AGENT_TTL_MS) return hit.agent;
+  const p = fetchAgent(agentId);
+  agentCache.set(agentId, { at: Date.now(), agent: p });
+  p.catch(() => agentCache.delete(agentId));
+  return p;
+}
+
+function getGreetingAudio(a: AgentConfig): Promise<{ audio_url: string }> {
+  const g = a.greeting || "Hello, this is your AI assistant.";
+  const key = JSON.stringify([g, a.voice_id, a.language, a.tts_engine, a.voice_settings]);
+  const hit = greetingCache.get(key);
+  if (hit) return hit;
+  const p = synthTts(g, a.voice_id, a.language, a.tts_engine, a.voice_settings);
+  greetingCache.set(key, p);
+  p.catch(() => greetingCache.delete(key));
+  if (greetingCache.size > 200) greetingCache.delete(greetingCache.keys().next().value!);
+  return p;
+}
+
 // ---------- Bun server ----------
 
 const server = Bun.serve<Ctx>({
